@@ -1,0 +1,3 @@
+interface:
+  display_name: "DocString Parallel Implementation"
+  short_description: "Delegate spec work into files and run safe subagents"

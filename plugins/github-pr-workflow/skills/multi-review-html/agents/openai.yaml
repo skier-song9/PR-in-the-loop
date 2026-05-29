@@ -1,0 +1,3 @@
+interface:
+  display_name: "Multi Review HTML"
+  short_description: "Run typed reviewer subagents and create an HTML report"

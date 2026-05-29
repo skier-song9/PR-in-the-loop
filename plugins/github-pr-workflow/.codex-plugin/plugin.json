@@ -1,0 +1,37 @@
+{
+  "name": "github-pr-workflow",
+  "version": "0.1.0",
+  "description": "GitHub issue-to-PR development workflow skills modeled on Superpowers and recent user work patterns.",
+  "author": {
+    "name": "skier-song9",
+    "url": "https://github.com/skier-song9"
+  },
+  "homepage": "https://github.com/skier-song9/PR-in-the-loop",
+  "repository": "https://github.com/skier-song9/PR-in-the-loop",
+  "license": "Apache-2.0",
+  "keywords": [
+    "github",
+    "pull-request",
+    "workflow",
+    "code-review",
+    "superpowers"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "GitHub PR Workflow",
+    "shortDescription": "Issue, PR planning, implementation, review, and PR message workflows for Codex.",
+    "longDescription": "GitHub PR Workflow packages a Superpowers-aligned development process: create an issue, write and human-review a PR plan, convert the approved plan into an implementation spec, delegate file-scoped implementation with fresh subagents, run typed parallel code review into an HTML report, and draft a Korean PR message.",
+    "developerName": "skier-song9",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "$github-pr-workflow:github-dev-workflow",
+    "websiteURL": "https://github.com/skier-song9/PR-in-the-loop",
+    "privacyPolicyURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/README.md",
+    "termsOfServiceURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/LICENSE",
+    "brandColor": "#2563EB"
+  }
+}
