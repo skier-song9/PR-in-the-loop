@@ -1,7 +1,8 @@
-"""DocString Spec Excerpt: Lock issue-language detection, Issue Template, and docstring worker model/effort selection requirements without changing runtime workflow behavior."""
+"""DocString Spec Excerpt: Lock issue-language, docstring worker model/effort, parallel spawn, and install config requirements without changing runtime workflow behavior."""
 
 from __future__ import annotations
 
+import re
 import unittest
 from pathlib import Path
 
@@ -16,6 +17,25 @@ def read_skill(name: str) -> str:
 
 def read_reference(skill: str, name: str) -> str:
     return (SKILLS / skill / "references" / name).read_text(encoding="utf-8")
+
+
+def read_root_file(name: str) -> str:
+    return (ROOT / name).read_text(encoding="utf-8")
+
+
+def read_doc(path: str) -> str:
+    return (ROOT / path).read_text(encoding="utf-8")
+
+
+def extract_ai_agent_handoff(text: str) -> str:
+    match = re.search(
+        r"## Give This To Your AI Agent\n\n```text\n(?P<handoff>.*?)\n```",
+        text,
+        flags=re.DOTALL,
+    )
+    if match is None:
+        raise AssertionError("AI agent handoff block not found")
+    return match.group("handoff")
 
 
 class SkillRequirementTests(unittest.TestCase):
@@ -100,6 +120,68 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("Selected model:", prompt)
         self.assertIn("Selected reasoning effort:", prompt)
         self.assertIn("Selection reason:", prompt)
+
+    def test_docstring_parallel_requires_parallel_spawn_policy(self) -> None:
+        text = read_skill("docstring-parallel-implementation")
+        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+
+        self.assertIn("Parallel Subagent Spawn Policy", text)
+        self.assertIn("Use parallel subagents for independent work", text)
+        self.assertIn("Spawn one subagent per task", text)
+        self.assertIn("parallel policy in this skill supersedes the sub-skill's sequential default", text)
+        self.assertIn("Do not let multiple write-capable agents edit the same files", text)
+        self.assertIn("Use read-only explorer agents for investigation", text)
+        self.assertIn("Read-only explorer dispatch is parent-controlled", text)
+        self.assertIn("Wait for all subagents, then consolidate the results", text)
+        self.assertIn("Return a structured summary with findings, changed files, risks, and next actions", text)
+        self.assertIn("Writable tests and fixtures must be explicitly included in the safe file group", text)
+        self.assertIn("ownership ledger", text)
+        self.assertIn("compare the actual changed paths", text)
+        self.assertIn("Do not rely only on the worker's self-report", text)
+        self.assertIn("full assigned file group as `ASSIGNED_PATHS`", text)
+        self.assertIn("Do not spawn additional subagents", prompt)
+        self.assertIn("If this assignment is investigation-only, do not edit files", prompt)
+        self.assertIn("Investigation-only assignments do not use test-driven development", prompt)
+        self.assertIn("Edit only files listed in the assigned file group", prompt)
+        self.assertIn("tests or fixtures must also be listed in `ASSIGNED_PATHS`", prompt)
+        self.assertRegex(prompt, r"(?m)^- Assigned file group$")
+        self.assertRegex(prompt, r"(?m)^- Findings$")
+        self.assertRegex(prompt, r"(?m)^- Changed files$")
+        self.assertRegex(prompt, r"(?m)^- Changed files outside ownership: yes/no$")
+        self.assertRegex(prompt, r"(?m)^- Risks$")
+        self.assertRegex(prompt, r"(?m)^- Next actions$")
+
+    def test_install_documents_agents_parallel_config(self) -> None:
+        text = read_root_file("INSTALL.md")
+        handoff = extract_ai_agent_handoff(text)
+
+        self.assertIn("[agents]", text)
+        self.assertIn("max_threads = 16", text)
+        self.assertIn("max_depth = 1", text)
+        self.assertIn("~/.codex/config.toml", text)
+        self.assertIn("Ask for explicit consent before changing global Codex settings", text)
+        self.assertIn("Do not edit `~/.codex/config.toml` unless the user agrees", text)
+        self.assertIn("If `~/.codex/config.toml` already has an `[agents]` section, add or update", text)
+        self.assertIn("only if the block is missing", text)
+        self.assertIn("[agents]", handoff)
+        self.assertIn("max_threads = 16", handoff)
+        self.assertIn("max_depth = 1", handoff)
+        self.assertIn("Ask whether I agree before changing `~/.codex/config.toml`", handoff)
+        self.assertIn("preserve existing keys and comments", handoff)
+        self.assertIn("create the full `[agents]` block only if the block is missing", handoff)
+        self.assertIn("do not append a duplicate `[agents]` table", handoff)
+        self.assertIn("record previous values", handoff)
+
+    def test_issue_6_docs_record_latest_supersession(self) -> None:
+        pr_plan = read_doc("docs/pr-plans/issue-6-parallel-subagents-config.md")
+        implementation_plan = read_doc("docs/superpowers/plans/2026-05-30-parallel-subagents-config.md")
+
+        for text in (pr_plan, implementation_plan):
+            self.assertIn("Supersession note", text)
+            self.assertIn("max_threads = 16", text)
+            self.assertIn("explicit consent before global config edits", text)
+            self.assertIn("worker summaries include `Changed files outside ownership: yes/no`", text)
+            self.assertIn("workers must not spawn nested subagents", text)
 
     def test_multi_review_requires_all_reviewers_and_kami_layout(self) -> None:
         text = read_skill("multi-review-html")
