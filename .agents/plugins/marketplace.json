@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "github-pr-workflow",
+      "name": "pr-in-the-loop",
       "source": {
         "source": "local",
-        "path": "./plugins/github-pr-workflow"
+        "path": "./plugins/pr-in-the-loop"
       },
       "policy": {
         "installation": "AVAILABLE",

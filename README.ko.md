@@ -14,14 +14,14 @@
 git clone https://github.com/skier-song9/PR-in-the-loop.git
 cd PR-in-the-loop
 codex plugin marketplace add "$(pwd)"
-codex plugin add github-pr-workflow@pr-in-the-loop
+codex plugin add pr-in-the-loop@pr-in-the-loop
 ```
 
-설치 후 새 Codex thread를 시작해야 새 skill이 로드된다. 시작 skill은 `$github-pr-workflow:github-dev-workflow`이다.
+설치 후 새 Codex thread를 시작해야 새 skill이 로드된다. 시작 skill은 `$pr-in-the-loop:github-dev-workflow`이다.
 
 ## How It Works
 
-PR In The Loop는 Codex 개발 워크플로우를 설치 가능한 플러그인으로 묶는다. 핵심 플러그인인 `github-pr-workflow`는 Superpowers식 개발 흐름을 유지한다.
+PR In The Loop는 Codex 개발 워크플로우를 설치 가능한 플러그인으로 묶는다. 핵심 플러그인인 `pr-in-the-loop`는 Superpowers식 개발 흐름을 유지한다.
 
 1. 문제를 인식하고 GitHub Issue를 만든다.
 2. `docs/` 아래에 사람이 리뷰하는 PR 계획 문서를 작성한다.
@@ -47,7 +47,7 @@ codex plugin marketplace add "$(pwd)"
 플러그인을 설치한다.
 
 ```bash
-codex plugin add github-pr-workflow@pr-in-the-loop
+codex plugin add pr-in-the-loop@pr-in-the-loop
 ```
 
 ### Update
@@ -55,18 +55,18 @@ codex plugin add github-pr-workflow@pr-in-the-loop
 ```bash
 cd PR-in-the-loop
 git pull
-codex plugin add github-pr-workflow@pr-in-the-loop
+codex plugin add pr-in-the-loop@pr-in-the-loop
 ```
 
-업데이트 후 새 Codex thread를 열고 `$github-pr-workflow:github-dev-workflow`를 호출한다.
+업데이트 후 새 Codex thread를 열고 `$pr-in-the-loop:github-dev-workflow`를 호출한다.
 
 ## The Basic Workflow
 
-1. `github-pr-workflow:github-issue-pr-planning` - repo 맥락을 확인하고 GitHub Issue를 만들거나 draft로 작성한 뒤, PR 계획 문서를 만들고 사람 리뷰에서 멈춘다.
-2. `github-pr-workflow:pr-plan-to-spec` - 승인된 PR 계획을 Superpowers planning 규칙에 맞춰 구체적인 구현 spec으로 바꾼다. spec은 사람이 리뷰하지 않고 커밋하지 않는다.
-3. `github-pr-workflow:docstring-parallel-implementation` - spec의 파일별 책임을 짧은 DocString/comment로 옮기고, 안전한 파일 그룹만 fresh subagent에게 병렬 위임한다.
-4. `github-pr-workflow:multi-review-html` - 유형별 reviewer subagent를 병렬 실행하고 `docs/reviews/` 아래 HTML 보고서 하나로 합친다.
-5. `github-pr-workflow:pr-message-writer` - 사람이 리뷰 상태를 승인한 뒤 근거 기반 한국어 PR 메시지를 작성한다.
+1. `pr-in-the-loop:github-issue-pr-planning` - repo 맥락을 확인하고 GitHub Issue를 만들거나 draft로 작성한 뒤, PR 계획 문서를 만들고 사람 리뷰에서 멈춘다.
+2. `pr-in-the-loop:pr-plan-to-spec` - 승인된 PR 계획을 Superpowers planning 규칙에 맞춰 구체적인 구현 spec으로 바꾼다. spec은 사람이 리뷰하지 않고 커밋하지 않는다.
+3. `pr-in-the-loop:docstring-parallel-implementation` - spec의 파일별 책임을 짧은 DocString/comment로 옮기고, 안전한 파일 그룹만 fresh subagent에게 병렬 위임한다.
+4. `pr-in-the-loop:multi-review-html` - 유형별 reviewer subagent를 병렬 실행하고 `docs/reviews/` 아래 HTML 보고서 하나로 합친다.
+5. `pr-in-the-loop:pr-message-writer` - 사람이 리뷰 상태를 승인한 뒤 근거 기반 한국어 PR 메시지를 작성한다.
 
 ## What's Inside
 
@@ -74,22 +74,22 @@ codex plugin add github-pr-workflow@pr-in-the-loop
 
 | Plugin | Category | Purpose |
 |---|---|---|
-| `github-pr-workflow` | Coding | Issue부터 PR 메시지까지 계획, 구현, 리뷰를 연결하는 워크플로우. |
+| `pr-in-the-loop` | Coding | Issue부터 PR 메시지까지 계획, 구현, 리뷰를 연결하는 워크플로우. |
 
-### `github-pr-workflow` Skills
+### `pr-in-the-loop` Skills
 
 | Skill | When to use |
 |---|---|
-| `github-pr-workflow:github-dev-workflow` | Issue-to-PR 전체 흐름을 실행할 때. |
-| `github-pr-workflow:github-issue-pr-planning` | 문제에서 시작해 Issue와 사람이 리뷰하는 PR 계획을 만들 때. |
-| `github-pr-workflow:pr-plan-to-spec` | 승인된 PR 계획을 구체적이고 커밋하지 않는 구현 spec으로 바꿀 때. |
-| `github-pr-workflow:docstring-parallel-implementation` | 파일별 책임 위임과 안전한 subagent 구현이 필요할 때. |
-| `github-pr-workflow:multi-review-html` | 유형별 reviewer subagent로 코드 리뷰하고 HTML 보고서를 만들 때. |
-| `github-pr-workflow:pr-message-writer` | 근거 기반 한국어 PR 메시지가 필요할 때. |
+| `pr-in-the-loop:github-dev-workflow` | Issue-to-PR 전체 흐름을 실행할 때. |
+| `pr-in-the-loop:github-issue-pr-planning` | 문제에서 시작해 Issue와 사람이 리뷰하는 PR 계획을 만들 때. |
+| `pr-in-the-loop:pr-plan-to-spec` | 승인된 PR 계획을 구체적이고 커밋하지 않는 구현 spec으로 바꿀 때. |
+| `pr-in-the-loop:docstring-parallel-implementation` | 파일별 책임 위임과 안전한 subagent 구현이 필요할 때. |
+| `pr-in-the-loop:multi-review-html` | 유형별 reviewer subagent로 코드 리뷰하고 HTML 보고서를 만들 때. |
+| `pr-in-the-loop:pr-message-writer` | 근거 기반 한국어 PR 메시지가 필요할 때. |
 
 ### Reviewer Types
 
-`github-pr-workflow:multi-review-html`에는 다음 reviewer가 포함된다.
+`pr-in-the-loop:multi-review-html`에는 다음 reviewer가 포함된다.
 
 - spec compliance
 - code quality and edge cases
@@ -105,7 +105,7 @@ codex plugin add github-pr-workflow@pr-in-the-loop
 ```text
 .agents/plugins/marketplace.json
 plugins/
-  github-pr-workflow/
+  pr-in-the-loop/
     .codex-plugin/plugin.json
     skills/
 scripts/check_plugins.py

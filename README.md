@@ -14,14 +14,14 @@ Codex plugin marketplace for human-in-the-loop PR development.
 git clone https://github.com/skier-song9/PR-in-the-loop.git
 cd PR-in-the-loop
 codex plugin marketplace add "$(pwd)"
-codex plugin add github-pr-workflow@pr-in-the-loop
+codex plugin add pr-in-the-loop@pr-in-the-loop
 ```
 
-Start a new Codex thread after installing so the new skills load, then invoke `$github-pr-workflow:github-dev-workflow`.
+Start a new Codex thread after installing so the new skills load, then invoke `$pr-in-the-loop:github-dev-workflow`.
 
 ## How It Works
 
-PR In The Loop packages Codex workflows as installable plugins. The main plugin, `github-pr-workflow`, keeps the Superpowers-style development spine:
+PR In The Loop packages Codex workflows as installable plugins. The main plugin, `pr-in-the-loop`, keeps the Superpowers-style development spine:
 
 1. identify a problem and create a GitHub Issue
 2. write a human-reviewed PR plan under `docs/`
@@ -47,7 +47,7 @@ codex plugin marketplace add "$(pwd)"
 Install the plugin:
 
 ```bash
-codex plugin add github-pr-workflow@pr-in-the-loop
+codex plugin add pr-in-the-loop@pr-in-the-loop
 ```
 
 ### Update
@@ -55,18 +55,18 @@ codex plugin add github-pr-workflow@pr-in-the-loop
 ```bash
 cd PR-in-the-loop
 git pull
-codex plugin add github-pr-workflow@pr-in-the-loop
+codex plugin add pr-in-the-loop@pr-in-the-loop
 ```
 
-Open a new Codex thread after updating, then invoke `$github-pr-workflow:github-dev-workflow`.
+Open a new Codex thread after updating, then invoke `$pr-in-the-loop:github-dev-workflow`.
 
 ## The Basic Workflow
 
-1. `github-pr-workflow:github-issue-pr-planning` - inspect repo context, create or draft a GitHub Issue, write a PR plan, and stop for human review.
-2. `github-pr-workflow:pr-plan-to-spec` - use Superpowers planning discipline to turn the approved PR plan into a concrete implementation spec. The spec is not human-reviewed and is not committed.
-3. `github-pr-workflow:docstring-parallel-implementation` - copy each file's responsibility from the spec into a short DocString or comment, then dispatch safe file groups to fresh subagents.
-4. `github-pr-workflow:multi-review-html` - run typed reviewer subagents in parallel and synthesize one HTML report under `docs/reviews/`.
-5. `github-pr-workflow:pr-message-writer` - draft the final Korean PR message after the human accepts the review state.
+1. `pr-in-the-loop:github-issue-pr-planning` - inspect repo context, create or draft a GitHub Issue, write a PR plan, and stop for human review.
+2. `pr-in-the-loop:pr-plan-to-spec` - use Superpowers planning discipline to turn the approved PR plan into a concrete implementation spec. The spec is not human-reviewed and is not committed.
+3. `pr-in-the-loop:docstring-parallel-implementation` - copy each file's responsibility from the spec into a short DocString or comment, then dispatch safe file groups to fresh subagents.
+4. `pr-in-the-loop:multi-review-html` - run typed reviewer subagents in parallel and synthesize one HTML report under `docs/reviews/`.
+5. `pr-in-the-loop:pr-message-writer` - draft the final Korean PR message after the human accepts the review state.
 
 ## What's Inside
 
@@ -74,22 +74,22 @@ Open a new Codex thread after updating, then invoke `$github-pr-workflow:github-
 
 | Plugin | Category | Purpose |
 |---|---|---|
-| `github-pr-workflow` | Coding | Issue-to-PR workflow for scoped planning, implementation, review, and PR messaging. |
+| `pr-in-the-loop` | Coding | Issue-to-PR workflow for scoped planning, implementation, review, and PR messaging. |
 
-### `github-pr-workflow` Skills
+### `pr-in-the-loop` Skills
 
 | Skill | When to use |
 |---|---|
-| `github-pr-workflow:github-dev-workflow` | Run the full Issue-to-PR workflow. |
-| `github-pr-workflow:github-issue-pr-planning` | Start from a problem, create/draft a GitHub Issue, and write a human-reviewed PR plan. |
-| `github-pr-workflow:pr-plan-to-spec` | Convert an approved PR plan into a concrete, uncommitted implementation spec. |
-| `github-pr-workflow:docstring-parallel-implementation` | Implement from a concrete spec with file-scoped delegation and safe subagents. |
-| `github-pr-workflow:multi-review-html` | Review code through typed subagents and write one HTML report. |
-| `github-pr-workflow:pr-message-writer` | Draft a Korean PR message from evidence. |
+| `pr-in-the-loop:github-dev-workflow` | Run the full Issue-to-PR workflow. |
+| `pr-in-the-loop:github-issue-pr-planning` | Start from a problem, create/draft a GitHub Issue, and write a human-reviewed PR plan. |
+| `pr-in-the-loop:pr-plan-to-spec` | Convert an approved PR plan into a concrete, uncommitted implementation spec. |
+| `pr-in-the-loop:docstring-parallel-implementation` | Implement from a concrete spec with file-scoped delegation and safe subagents. |
+| `pr-in-the-loop:multi-review-html` | Review code through typed subagents and write one HTML report. |
+| `pr-in-the-loop:pr-message-writer` | Draft a Korean PR message from evidence. |
 
 ### Reviewer Types
 
-`github-pr-workflow:multi-review-html` includes reviewers for:
+`pr-in-the-loop:multi-review-html` includes reviewers for:
 
 - spec compliance
 - code quality and edge cases
@@ -105,7 +105,7 @@ Every finding must include a concrete example.
 ```text
 .agents/plugins/marketplace.json
 plugins/
-  github-pr-workflow/
+  pr-in-the-loop/
     .codex-plugin/plugin.json
     skills/
 scripts/check_plugins.py
