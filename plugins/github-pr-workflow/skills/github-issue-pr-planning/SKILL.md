@@ -3,6 +3,8 @@ name: github-issue-pr-planning
 description: Use when a problem needs a GitHub Issue and a human-reviewed PR plan before implementation.
 ---
 
+<!-- DocString Spec Excerpt: Define explicit user-language detection and the Description/Tasks/References Issue Template for GitHub Issue drafting while preserving existing PR planning gates. -->
+
 # GitHub Issue PR Planning
 
 Create the problem record and PR plan. This is the user's GitHub-aware version of brainstorming.
@@ -11,7 +13,19 @@ Create the problem record and PR plan. This is the user's GitHub-aware version o
 
 ## Language Rule
 
-Write the PR plan in the agent conversation session's primary language. Infer the primary language from the current user request and the surrounding conversation. If the conversation is mixed, use the language the user used for the request that triggered planning. Keep repository identifiers, code symbols, commands, file paths, and quoted errors unchanged.
+Detect the user's language before drafting any GitHub Issue or PR plan. Write the Issue title, Issue body, and PR plan in the detected user language.
+
+## User Language Detection
+
+Before drafting or creating a GitHub Issue:
+
+1. Inspect the current user request first.
+2. Inspect the surrounding conversation only as supporting evidence.
+3. If the current user request is mostly one natural language, use that language.
+4. If the conversation is mixed, use the language the user used when asking for the Issue or PR plan.
+5. If the user explicitly names a target language, use that language.
+6. Apply the detected language to the Issue title, Issue body, and PR plan.
+7. Preserve repository identifiers, code symbols, commands, file paths, links, and quoted output exactly.
 
 ## Ambiguity Gate
 
@@ -26,12 +40,35 @@ Before creating the Issue or PR plan, remove ambiguity with the same discipline 
 ## Process
 
 1. Read current repo context: `AGENTS.md`, issue template, relevant docs, branch, recent related files, and existing GitHub issue/PR state.
-2. Run the Ambiguity Gate. If the problem is vague enough to create the wrong Issue or PR boundary, ask one concise question and stop.
-3. Once ambiguity is resolved, propose 2-3 solution approaches with tradeoffs and recommend one.
-4. Create or update a GitHub Issue using the GitHub plugin/app first, then `gh` if needed. In no-write or dry-run mode, produce the issue draft and mark it `not-created`.
-5. Write a PR plan markdown file under the most relevant `docs/` subtree, using the session's primary language. In no-write or dry-run mode, return the PR plan draft in the response, name the intended path, and do not write the file.
-6. If one Issue needs multiple PRs, create one plan section per PR and make ordering explicit.
-7. Stop for human review. Do not create a spec, code, branch, commit, or PR until approval is explicit.
+2. Run User Language Detection and keep the detected language fixed for the Issue title, Issue body, and PR plan unless the user corrects it.
+3. Run the Ambiguity Gate. If the problem is vague enough to create the wrong Issue or PR boundary, ask one concise question in the detected user language and stop.
+4. Once ambiguity is resolved, propose 2-3 solution approaches with tradeoffs and recommend one in the detected user language.
+5. Create or update a GitHub Issue using the GitHub plugin/app first, then `gh` if needed. The Issue title and Issue body must use the detected user language and the Issue Template. In no-write or dry-run mode, produce the issue draft and mark it `not-created`.
+6. Write a PR plan markdown file under the most relevant `docs/` subtree, using the detected user language. In no-write or dry-run mode, return the PR plan draft in the response, name the intended path, and do not write the file.
+7. If one Issue needs multiple PRs, create one plan section per PR and make ordering explicit.
+8. Stop for human review. Do not create a spec, code, branch, commit, or PR until approval is explicit.
+
+## Issue Template
+
+Draft every GitHub Issue body with this structure, translated into the detected user language when the user is not writing in English. Keep the heading labels exactly as shown unless the user supplies a different template.
+
+```markdown
+## Description
+one-line feature or problem summary
+
+detailed explanation; screenshots, videos, links, and examples may be included when useful
+
+## Tasks
+- [ ] Item 1
+- [ ] Item 2
+- [ ] Item 3
+
+## References
+- [Link text](Link addr)
+- related Issue or PR
+```
+
+Fill `Tasks` with concrete checkbox items from the clarified scope. Fill `References` with relevant links, related Issues or PRs, source files, or `None` when there is no useful reference.
 
 ## PR Plan Requirements
 

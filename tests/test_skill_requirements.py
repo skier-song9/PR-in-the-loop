@@ -1,3 +1,5 @@
+"""DocString Spec Excerpt: Lock issue-language detection and Issue Template requirements for github-issue-pr-planning without changing runtime workflow behavior."""
+
 from __future__ import annotations
 
 import unittest
@@ -20,9 +22,40 @@ class SkillRequirementTests(unittest.TestCase):
     def test_issue_pr_planning_requires_session_language_and_ambiguity_gate(self) -> None:
         text = read_skill("github-issue-pr-planning")
 
-        self.assertIn("session's primary language", text)
+        self.assertIn("detected user language", text)
         self.assertIn("Ambiguity Gate", text)
         self.assertIn("Do not create the Issue or PR plan while blocking ambiguity remains", text)
+
+    def test_issue_pr_planning_requires_issue_language_detection(self) -> None:
+        text = read_skill("github-issue-pr-planning")
+
+        self.assertIn("User Language Detection", text)
+        self.assertIn("Before drafting or creating a GitHub Issue", text)
+        self.assertIn("current user request", text)
+        self.assertIn("surrounding conversation", text)
+        self.assertIn("If the conversation is mixed", text)
+        self.assertIn("If the user explicitly names a target language, use that language", text)
+        self.assertIn("Apply the detected language to the Issue title, Issue body, and PR plan", text)
+        self.assertIn("Preserve repository identifiers, code symbols, commands, file paths, links, and quoted output exactly", text)
+        self.assertIn("ask one concise question in the detected user language", text)
+        self.assertIn("recommend one in the detected user language", text)
+        self.assertIn("The Issue title and Issue body must use the detected user language and the Issue Template", text)
+        self.assertIn("using the detected user language", text)
+
+    def test_issue_pr_planning_requires_issue_template(self) -> None:
+        text = read_skill("github-issue-pr-planning")
+
+        self.assertIn("Issue Template", text)
+        self.assertIn("## Description", text)
+        self.assertIn("one-line feature or problem summary", text)
+        self.assertIn("detailed explanation", text)
+        self.assertIn("## Tasks", text)
+        self.assertIn("- [ ]", text)
+        self.assertIn("## References", text)
+        self.assertIn("related Issue or PR", text)
+        self.assertIn("Keep the heading labels exactly as shown unless the user supplies a different template", text)
+        self.assertIn("Fill `Tasks` with concrete checkbox items from the clarified scope", text)
+        self.assertIn("Fill `References` with relevant links, related Issues or PRs, source files, or `None`", text)
 
     def test_pr_plan_template_has_clarification_status_and_language_instruction(self) -> None:
         text = read_reference("github-issue-pr-planning", "pr-plan-template.md")
