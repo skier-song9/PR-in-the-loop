@@ -1,11 +1,17 @@
 ---
 name: pr-message-writer
-description: Use when implementation and review are done and a PR message is needed.
+description: Use when implementation and review are done, or when completed changes are ready to be represented as a pull request and the user asks the agent to prepare that pull request regardless of the user's exact phrasing.
 ---
 
 # PR Message Writer
 
 Draft the final PR message from evidence, not memory.
+
+## Trigger Rule
+
+Use this skill when completed changes are ready to be represented as a pull request and the user's intent is for the agent to prepare that pull request, regardless of the user's exact phrasing. PR Message Writer is the mandatory evidence-to-PR-body step before any pull request creation or publication flow in the GitHub PR Workflow plugin.
+
+This rule is about the user's intent to turn completed work into a pull request, not about matching a fixed verb such as create, open, publish, upload, raise, or draft.
 
 ## Language Rule
 
