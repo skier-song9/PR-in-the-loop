@@ -1,5 +1,7 @@
 # Install PR In The Loop
 
+<!-- DocString Spec Excerpt: Document optional Codex agents thread settings for parallel subagent workflows with explicit user consent before global config edits. -->
+
 This guide is written for Codex users and for AI agents asked to install this repository.
 
 ## Give This To Your AI Agent
@@ -14,7 +16,13 @@ Steps:
    codex plugin marketplace add "$(pwd)"
 4. Install:
    codex plugin add github-pr-workflow@pr-in-the-loop
-5. Tell me to start a new Codex thread after installation and invoke $github-pr-workflow:github-dev-workflow.
+5. If this install will use parallel subagent workflows, explain that the optional global Codex config is:
+   [agents]
+   max_threads = 16
+   max_depth = 1
+   This changes `~/.codex/config.toml`. Ask whether I agree before changing `~/.codex/config.toml`. Do not edit it unless I agree.
+   If I agree, preserve existing keys and comments, create the full `[agents]` block only if the block is missing, do not append a duplicate `[agents]` table, and record previous values before editing.
+6. Tell me to start a new Codex thread after installation and invoke $github-pr-workflow:github-dev-workflow.
 
 Do not copy plugin files into ~/.codex manually. Use the marketplace commands.
 ```
@@ -47,6 +55,20 @@ Install the main workflow plugin:
 codex plugin add github-pr-workflow@pr-in-the-loop
 ```
 
+## Optional Parallel Subagent Config
+
+For workflows that spawn parallel subagents, these optional agent settings can be added to the user's global `~/.codex/config.toml`:
+
+```toml
+[agents]
+max_threads = 16
+max_depth = 1
+```
+
+These values change global Codex behavior. Ask for explicit consent before changing global Codex settings. Do not edit `~/.codex/config.toml` unless the user agrees.
+
+After the user agrees, apply this rule: If `~/.codex/config.toml` already has an `[agents]` section, add or update `max_threads = 16` and `max_depth = 1` inside that section while preserving existing keys and comments. Create the full block only if the block is missing. Record any previous values so the user can roll back.
+
 Start a new Codex thread and invoke `$github-pr-workflow:github-dev-workflow`.
 
 ## Update Existing Install
@@ -57,6 +79,8 @@ git pull
 python3 scripts/check_plugins.py
 codex plugin add github-pr-workflow@pr-in-the-loop
 ```
+
+After updating, review Optional Parallel Subagent Config. Ask before changing global Codex settings. If the user agrees and `~/.codex/config.toml` already has an `[agents]` section, add or update the keys there while preserving existing keys and comments; create the full block only if the block is missing.
 
 Start a new Codex thread after updating and invoke `$github-pr-workflow:github-dev-workflow`.
 

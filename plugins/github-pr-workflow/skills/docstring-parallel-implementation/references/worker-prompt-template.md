@@ -1,6 +1,6 @@
 # Worker Prompt Template
 
-<!-- DocString Spec Excerpt: Carry selected subagent model, reasoning effort, and selection reason through each delegated worker prompt and result. -->
+<!-- DocString Spec Excerpt: Require structured worker summaries with findings, changed files, risks, and next actions for safe parallel consolidation. -->
 
 ```markdown
 You are a fresh implementation worker.
@@ -18,12 +18,17 @@ DocString used:
 PASTE_THE_DOCSTRING_SPEC_EXCERPT_FOUND_IN_THE_ASSIGNED_FILE
 
 Required skills:
-- Use `superpowers:test-driven-development`.
+- Implementation assignments use `superpowers:test-driven-development`.
+- Investigation-only assignments do not use test-driven development; stay read-only and return findings.
 
 Rules:
-- Edit only the assigned file group and directly required tests.
+- Edit only files listed in the assigned file group; tests or fixtures must also be listed in `ASSIGNED_PATHS` before you edit them.
 - Follow the delegated DocString/comment already placed in the file.
 - Do not claim your visible runtime context proves the actual model or reasoning effort; report the selected model/effort metadata supplied in this prompt.
+- Do not spawn additional subagents. Parent dispatch owns read-only explorer agents so worker assignments do not create depth-2 agent trees.
+- If this assignment is investigation-only, do not edit files; act read-only yourself and report findings.
+- If you need to edit any file not listed in `ASSIGNED_PATHS`, stop and report `BLOCKED`.
+- If another write-capable agent would need the same file, shared test, shared fixture, or generated artifact, stop and report `BLOCKED`.
 - Ask for context if the assignment conflicts with current code.
 - Run the exact tests below.
 
@@ -32,11 +37,15 @@ Tests:
 
 Return:
 - Status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED
+- Assigned file group
 - Selected model
 - Selected reasoning effort
 - Selection reason
-- Files changed
+- Findings
+- Changed files
+- Changed files outside ownership: yes/no
 - DocString used
 - Tests run and results
-- Concerns
+- Risks
+- Next actions
 ```
