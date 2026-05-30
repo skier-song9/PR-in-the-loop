@@ -9,6 +9,10 @@ Turn an approved PR plan into a concrete implementation spec while preserving Su
 
 **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans`.
 
+## Language Rule
+
+Always write the generated spec in English, even when the PR plan, Issue, conversation, or repository docs use another language. Preserve code symbols, file paths, commands, errors, and quoted source text exactly.
+
 ## Preconditions
 
 - A PR plan markdown file exists under `docs/`.
@@ -21,7 +25,7 @@ If any precondition is missing, stop and request the missing artifact or approva
 
 1. Locate the PR plan from the user path, linked Issue, current branch, or recent `docs/` PR plan files. Ask if multiple plausible plans exist.
 2. Read repo rules and the relevant code before writing the spec.
-3. Use `superpowers:writing-plans` standards: exact files, concrete tasks, TDD steps, commands, expected outputs, and self-review.
+3. Use `superpowers:writing-plans` standards: exact files, concrete tasks, TDD steps, commands, expected outputs, and self-review. The spec content must be English.
 4. Save the spec near the PR plan or under `docs/superpowers/plans/` when repo convention points there.
 5. Run a placeholder scan and self-review for scope drift.
 6. Verify the spec is not staged. Do not commit it.

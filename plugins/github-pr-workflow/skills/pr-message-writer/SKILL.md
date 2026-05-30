@@ -1,11 +1,15 @@
 ---
 name: pr-message-writer
-description: Use when implementation and review are done and a Korean PR message is needed.
+description: Use when implementation and review are done and a PR message is needed.
 ---
 
 # PR Message Writer
 
 Draft the final PR message from evidence, not memory.
+
+## Language Rule
+
+Write the PR message in the user's primary language. Infer the user's primary language from the current request and surrounding agent conversation. If the conversation is mixed, use the language the user used when asking for the PR message. Keep Issue references, file paths, commands, code identifiers, and quoted output unchanged.
 
 ## Inputs
 
@@ -20,7 +24,7 @@ If these are missing, stop and request the missing review decision.
 
 ## Template
 
-Use this Korean template by default:
+Use this template in the user's primary language. The Korean headings below are examples for Korean sessions; translate the headings and helper text when the user's primary language is not Korean.
 
 ```markdown
 ## 무엇을 수정하였는가?

@@ -3,6 +3,14 @@
 ```markdown
 # Issue ISSUE_NUMBER: SHORT_PROBLEM PR Plan
 
+> Write this PR plan in the agent conversation session's primary language.
+
+## Clarification Notes
+- Blocking questions asked:
+- Decisions that resolved ambiguity:
+- Remaining ambiguity:
+- Status: ambiguity-resolved
+
 ## Problem
 What is broken or missing, with evidence.
 

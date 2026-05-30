@@ -1,6 +1,6 @@
 {
   "name": "github-pr-workflow",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260529191808",
   "description": "GitHub issue-to-PR development workflow skills modeled on Superpowers and recent user work patterns.",
   "author": {
     "name": "skier-song9",
