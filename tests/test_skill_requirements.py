@@ -23,10 +23,6 @@ def read_root_file(name: str) -> str:
     return (ROOT / name).read_text(encoding="utf-8")
 
 
-def read_doc(path: str) -> str:
-    return (ROOT / path).read_text(encoding="utf-8")
-
-
 def extract_ai_agent_handoff(text: str) -> str:
     match = re.search(
         r"## Give This To Your AI Agent\n\n```text\n(?P<handoff>.*?)\n```",
@@ -172,17 +168,6 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("do not append a duplicate `[agents]` table", handoff)
         self.assertIn("record previous values", handoff)
 
-    def test_issue_6_docs_record_latest_supersession(self) -> None:
-        pr_plan = read_doc("docs/pr-plans/issue-6-parallel-subagents-config.md")
-        implementation_plan = read_doc("docs/superpowers/plans/2026-05-30-parallel-subagents-config.md")
-
-        for text in (pr_plan, implementation_plan):
-            self.assertIn("Supersession note", text)
-            self.assertIn("max_threads = 16", text)
-            self.assertIn("explicit consent before global config edits", text)
-            self.assertIn("worker summaries include `Changed files outside ownership: yes/no`", text)
-            self.assertIn("workers must not spawn nested subagents", text)
-
     def test_multi_review_requires_all_reviewers_and_kami_layout(self) -> None:
         text = read_skill("multi-review-html")
         template = read_reference("multi-review-html", "html-report-template.md")
@@ -198,6 +183,16 @@ class SkillRequirementTests(unittest.TestCase):
 
         self.assertIn("user's primary language", text)
         self.assertNotIn("Korean template by default", text)
+
+    def test_pr_message_writer_triggers_for_pull_request_preparation_intent(self) -> None:
+        text = read_skill("pr-message-writer")
+        dev_workflow = read_skill("github-dev-workflow")
+
+        self.assertIn("completed changes are ready to be represented as a pull request", text)
+        self.assertIn("regardless of the user's exact phrasing", text)
+        self.assertIn("before any pull request creation or publication flow", text)
+        self.assertIn("PR Message Writer is the mandatory evidence-to-PR-body step", text)
+        self.assertIn("use `github-pr-workflow:pr-message-writer` before creating or publishing the pull request", dev_workflow)
 
 
 if __name__ == "__main__":

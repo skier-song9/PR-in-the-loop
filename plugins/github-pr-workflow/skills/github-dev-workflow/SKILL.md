@@ -13,7 +13,7 @@ Run the user's GitHub work loop while preserving the Superpowers spine.
 2. **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` discipline through `github-pr-workflow:pr-plan-to-spec`.
 3. **REQUIRED SUB-SKILL:** Use `superpowers:subagent-driven-development` discipline through `github-pr-workflow:docstring-parallel-implementation`.
 4. **REQUIRED SUB-SKILL:** Use `superpowers:requesting-code-review` discipline through `github-pr-workflow:multi-review-html`.
-5. Use `github-pr-workflow:pr-message-writer` after the human accepts the HTML review or confirms no more fixes remain.
+5. Use `github-pr-workflow:pr-message-writer` after the human accepts the HTML review or confirms no more fixes remain. When the user asks the agent to prepare the completed work as a pull request, use `github-pr-workflow:pr-message-writer` before creating or publishing the pull request.
 
 If a Superpowers skill is unavailable, follow the same gate locally and report the fallback.
 
