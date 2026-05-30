@@ -4,6 +4,7 @@
 # PR_NAME Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `github-pr-workflow:docstring-parallel-implementation` or `superpowers:subagent-driven-development`.
+> This spec must be written in English.
 
 **Issue:** ISSUE_URL_OR_NUMBER
 **PR Plan:** PLAN_PATH

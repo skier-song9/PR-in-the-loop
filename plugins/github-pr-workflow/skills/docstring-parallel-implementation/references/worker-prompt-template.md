@@ -9,6 +9,9 @@ Issue/PR plan: PLAN_PATH_OR_URL
 Spec excerpt:
 RELEVANT_TASK_AND_FILE_RESPONSIBILITY
 
+DocString used:
+PASTE_THE_DOCSTRING_SPEC_EXCERPT_FOUND_IN_THE_ASSIGNED_FILE
+
 Required skills:
 - Use `superpowers:test-driven-development`.
 
@@ -24,6 +27,7 @@ Tests:
 Return:
 - Status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, or BLOCKED
 - Files changed
+- DocString used
 - Tests run and results
 - Concerns
 ```
