@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import json
 import re
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ROOT / "plugins" / "github-pr-workflow" / "skills"
+PLUGIN_DIR = ROOT / "plugins" / "pr-in-the-loop"
+SKILLS = PLUGIN_DIR / "skills"
 
 
 def read_skill(name: str) -> str:
@@ -23,6 +25,10 @@ def read_root_file(name: str) -> str:
     return (ROOT / name).read_text(encoding="utf-8")
 
 
+def read_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def extract_ai_agent_handoff(text: str) -> str:
     match = re.search(
         r"## Give This To Your AI Agent\n\n```text\n(?P<handoff>.*?)\n```",
@@ -35,6 +41,21 @@ def extract_ai_agent_handoff(text: str) -> str:
 
 
 class SkillRequirementTests(unittest.TestCase):
+    def test_marketplace_uses_pr_in_the_loop_plugin_entry(self) -> None:
+        marketplace = read_json(ROOT / ".agents" / "plugins" / "marketplace.json")
+
+        self.assertEqual("pr-in-the-loop", marketplace["name"])
+        self.assertEqual(1, len(marketplace["plugins"]))
+        self.assertEqual("pr-in-the-loop", marketplace["plugins"][0]["name"])
+        self.assertEqual("./plugins/pr-in-the-loop", marketplace["plugins"][0]["source"]["path"])
+
+    def test_plugin_manifest_uses_pr_in_the_loop_identity(self) -> None:
+        manifest = read_json(PLUGIN_DIR / ".codex-plugin" / "plugin.json")
+
+        self.assertEqual("pr-in-the-loop", manifest["name"])
+        self.assertEqual("PR In The Loop", manifest["interface"]["displayName"])
+        self.assertEqual("$pr-in-the-loop:github-dev-workflow", manifest["interface"]["defaultPrompt"])
+
     def test_issue_pr_planning_requires_session_language_and_ambiguity_gate(self) -> None:
         text = read_skill("github-issue-pr-planning")
 
@@ -192,7 +213,7 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("regardless of the user's exact phrasing", text)
         self.assertIn("before any pull request creation or publication flow", text)
         self.assertIn("PR Message Writer is the mandatory evidence-to-PR-body step", text)
-        self.assertIn("use `github-pr-workflow:pr-message-writer` before creating or publishing the pull request", dev_workflow)
+        self.assertIn("use `pr-in-the-loop:pr-message-writer` before creating or publishing the pull request", dev_workflow)
 
 
 if __name__ == "__main__":
