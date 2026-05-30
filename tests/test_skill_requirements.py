@@ -1,4 +1,4 @@
-"""DocString Spec Excerpt: Lock issue-language detection and Issue Template requirements for github-issue-pr-planning without changing runtime workflow behavior."""
+"""DocString Spec Excerpt: Lock issue-language detection, Issue Template, and docstring worker model/effort selection requirements without changing runtime workflow behavior."""
 
 from __future__ import annotations
 
@@ -79,6 +79,27 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("Do not dispatch a worker until its target files contain", text)
         self.assertIn("DocString used", prompt)
         self.assertIn("Subagent verification", text)
+
+    def test_docstring_parallel_requires_model_effort_selection_policy(self) -> None:
+        text = read_skill("docstring-parallel-implementation")
+        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+
+        self.assertIn("Subagent Model And Effort Selection", text)
+        self.assertIn("Set `model` and `reasoning_effort` when spawning each worker", text)
+        self.assertIn("trivial or mechanical", text)
+        self.assertIn("`gpt-5.4-mini` + `low`", text)
+        self.assertIn("simple bounded docs, tests, or code edits", text)
+        self.assertIn("`gpt-5.3-codex-spark` or `gpt-5.4-mini` + `medium`", text)
+        self.assertIn("routine implementation with local tests", text)
+        self.assertIn("`gpt-5.3-codex` or `gpt-5.4` + `medium`", text)
+        self.assertIn("complex integration, shared contracts, or reviewer work", text)
+        self.assertIn("`gpt-5.4` + `high`", text)
+        self.assertIn("high-uncertainty architecture, security, or cross-system work", text)
+        self.assertIn("`gpt-5.5` + `high` or `xhigh`", text)
+        self.assertIn("Subagents cannot reliably self-attest their actual runtime model or reasoning effort", text)
+        self.assertIn("Selected model:", prompt)
+        self.assertIn("Selected reasoning effort:", prompt)
+        self.assertIn("Selection reason:", prompt)
 
     def test_multi_review_requires_all_reviewers_and_kami_layout(self) -> None:
         text = read_skill("multi-review-html")
