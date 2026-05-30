@@ -113,9 +113,55 @@ class SkillRequirementTests(unittest.TestCase):
         prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
 
         self.assertIn("DocString Spec Excerpt", text)
-        self.assertIn("Do not dispatch a worker until its target files contain", text)
-        self.assertIn("DocString used", prompt)
+        self.assertIn("Do not dispatch a worker until each target file either contains", text)
+        self.assertIn("DocString/comments used by path", prompt)
         self.assertIn("Subagent verification", text)
+
+    def test_docstring_parallel_requires_context_rich_delegation_comments(self) -> None:
+        text = read_skill("docstring-parallel-implementation")
+        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+
+        self.assertIn(
+            "Add a short file-level comment to each target file that explains the spec context and the responsibility delegated to that file.",
+            text,
+        )
+        self.assertIn("context-rich delegated file-level comment", text)
+        self.assertIn("Required sections", text)
+        self.assertIn("`Context`", text)
+        self.assertIn("`References`", text)
+        self.assertIn("`Work Process`", text)
+        self.assertIn("Optional sections", text)
+        self.assertIn("`Test Method`", text)
+        self.assertIn("`Residual Risks`", text)
+        self.assertIn("The file owner completes only the work described in that delegated comment", text)
+        self.assertIn("when the file format supports comments or docstrings", text)
+        self.assertIn("commentless or generated artifacts", text)
+        self.assertIn("ownership ledger or nearest owning source/test file", text)
+        self.assertIn("either contains the delegated file-level comment", text)
+        self.assertIn("marked commentless", text)
+        self.assertIn("Do not include secrets, credentials, tokens, personal data, absolute local paths", text)
+        self.assertIn("reference repo-relative paths or public URLs only", text)
+        self.assertIn("DocString/comments used by path", text)
+
+        self.assertIn("Before implementing code, read the delegated file-level comment", prompt)
+        self.assertIn("refine that comment before editing code", prompt)
+        self.assertIn("Delegated file-level comments used", prompt)
+        self.assertIn("PATH -> comment", prompt)
+        self.assertIn("PATH -> COMMENTLESS", prompt)
+        self.assertIn("every assigned target file", prompt)
+        self.assertIn("For paths marked `COMMENTLESS`", prompt)
+        self.assertIn("do not add or refine an in-file comment", prompt)
+        self.assertIn("Do not add responsibilities, inputs/outputs, invariants, tests, or references", prompt)
+        self.assertIn("not present in the assigned spec excerpt", prompt)
+        self.assertIn("stop and report `NEEDS_CONTEXT` or `BLOCKED`", prompt)
+        self.assertIn("Do not include secrets, credentials, tokens, personal data, absolute local paths", prompt)
+        self.assertIn("reference repo-relative paths or public URLs only", prompt)
+        self.assertIn("Context", prompt)
+        self.assertIn("References", prompt)
+        self.assertIn("Work Process", prompt)
+        self.assertIn("Test Method", prompt)
+        self.assertIn("Residual Risks", prompt)
+        self.assertIn("DocString/comments used by path", prompt)
 
     def test_docstring_parallel_requires_model_effort_selection_policy(self) -> None:
         text = read_skill("docstring-parallel-implementation")

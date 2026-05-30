@@ -3,7 +3,7 @@ name: docstring-parallel-implementation
 description: Use when implementing a concrete spec from an approved PR plan with file-scoped delegation and subagents.
 ---
 
-<!-- DocString Spec Excerpt: Add parallel subagent spawn policy and structured worker summaries while preserving DocString delegation and model/effort selection. -->
+<!-- DocString Spec Excerpt: Require context-rich delegated file-level comments while preserving parallel spawn, model/effort selection, and structured worker summaries. -->
 
 # DocString Parallel Implementation
 
@@ -16,14 +16,14 @@ Implement from a concrete spec by delegating responsibility into target files, t
 
 1. Verify the concrete spec traces to a human-approved PR plan, then read the plan, spec, repo rules, and relevant current files. Stop if the trace or approval is missing.
 2. Extract the write set: each changed source file, writable test, writable fixture, generated artifact, its responsibility, tests, and dependencies.
-3. Add a short file-level DocString or comment to each target file that states only that file's delegated responsibility from the spec.
+3. Add a short file-level comment to each target file that explains the spec context and the responsibility delegated to that file. Apply this when the file format supports comments or docstrings. For commentless or generated artifacts, record the delegated context in the ownership ledger or nearest owning source/test file, mark the artifact as commentless, and use a path-keyed `COMMENTLESS` sentinel instead of editing the artifact.
 4. Partition work by safe ownership:
    - parallel: disjoint source, test, and fixture files with independent tests and no shared generated artifact
    - sequential: shared schema, migration, public contract, shared tests, or uncertain ownership
 5. Before dispatch, create an ownership ledger that maps each worker to exactly one safe file group and confirms no writable path appears in more than one write-capable group. Then classify each safe file group by task difficulty and choose the worker `model` and `reasoning_effort` from `Subagent Model And Effort Selection`.
-6. Dispatch one fresh worker per safe file group, treating each safe file group as one subagent task. Set `model` and `reasoning_effort` when spawning each worker, and give each worker the selected model, selected reasoning effort, selection reason, full assigned file group as `ASSIGNED_PATHS`, delegated DocString/comment, exact spec excerpt, tests to run, and no session history.
-7. Do not dispatch a worker until its target files contain the delegated DocString Spec Excerpt from the spec.
-8. After each worker, record Subagent verification: the worker read the DocString used, stayed inside its assigned file group, reported whether it changed files outside ownership, ran its exact tests, and reported status. Parent verification must compare the actual changed paths against the ownership ledger and the worker's assigned file group. Do not rely only on the worker's self-report.
+6. Dispatch one fresh worker per safe file group, treating each safe file group as one subagent task. Set `model` and `reasoning_effort` when spawning each worker, and give each worker the selected model, selected reasoning effort, selection reason, full assigned file group as `ASSIGNED_PATHS`, delegated file-level comments by path, any `COMMENTLESS` sentinel paths, exact spec excerpt, tests to run, and no session history.
+7. Do not dispatch a worker until each target file either contains the delegated file-level comment with a DocString Spec Excerpt from the spec or is marked commentless in the ownership ledger or nearest owning source/test file.
+8. After each worker, record Subagent verification: the worker read delegated comments used by path, including any `COMMENTLESS` sentinels, stayed inside its assigned file group, reported whether it changed files outside ownership, ran its exact tests, and reported status. Parent verification must compare the actual changed paths against the ownership ledger and the worker's assigned file group. Do not rely only on the worker's self-report.
 9. After each worker, run spec-compliance review before code-quality review. Fix and re-review until both reviewer subagents approve.
 10. After all groups, run integration tests and a final review. The final consolidation must include findings, changed files, risks, and next actions. Complete only when tests and reviews pass, or report a blocker.
 
@@ -62,13 +62,21 @@ Subagents cannot reliably self-attest their actual runtime model or reasoning ef
 
 ## DocString Rules
 
-- Keep the delegation note short and specific.
+- Keep the context-rich delegated file-level comment short and specific.
 - Use a heading or first sentence containing `DocString Spec Excerpt` when the file format allows it.
-- Include only the exact responsibility, accepted inputs/outputs, invariants, and tests from the spec for that file.
+- Explain the spec context, exact file responsibility, accepted inputs/outputs, invariants, and tests from the spec for that file.
+- Required sections: `Context`, `References`, and `Work Process`.
+- Optional sections: `Test Method` and `Residual Risks`.
+- Use `Context` to describe what responsibility or role this file owns in the spec.
+- Use `References` for official docs, PR plan, Issue, or related artifacts when available.
+- Use `Work Process` to describe how the file's business logic or workflow should run.
+- Use `Test Method` to describe how to test this file's delegated work when that evidence is useful.
+- Use `Residual Risks` for decisions, risks, or review points that need human attention.
+- For commentless or generated artifacts, do not force invalid comments into the file. Record the same delegated context in the ownership ledger or nearest owning source/test file, mark the artifact as commentless, and represent the path as `PATH -> COMMENTLESS`.
 - Do not paste the whole spec.
-- Do not include secrets, user data, issue discussion, or unverifiable claims.
+- Do not include secrets, credentials, tokens, personal data, absolute local paths, issue discussion text, or unverifiable claims; reference repo-relative paths or public URLs only.
 - Prefer module/class/function docstrings in Python; otherwise use the smallest local comment block that fits existing style.
-- The file owner completes only the work described in that note.
+- The file owner completes only the work described in that delegated comment or commentless ledger context.
 
 ## Subagent Verification
 
@@ -78,7 +86,7 @@ Each worker result must include:
 - selected model
 - selected reasoning effort
 - selection reason
-- DocString used
+- DocString/comments used by path
 - exact test command and result
 - changed files outside ownership: yes/no
 - findings
