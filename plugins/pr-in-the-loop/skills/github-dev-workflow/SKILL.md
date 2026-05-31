@@ -20,6 +20,7 @@ If a Superpowers skill is unavailable, follow the same gate locally and report t
 ## Gates
 
 - Do not implement before a GitHub Issue exists or an issue draft is explicitly accepted as dry-run output.
+- After `pr-in-the-loop:issue`, create or draft a GitHub Issue, then stop at the Issue boundary; starting the separate `pr-in-the-loop:planning-pr` PR-plan step requires explicit human approval. If `planning-pr` still requires an approved PR plan artifact and none exists, stop and request that artifact instead of inventing one.
 - Do not write a concrete implementation spec until the PR plan markdown has been human-reviewed and approved.
 - Do not implement until a concrete spec exists and traces back to the approved PR plan.
 - Do not commit the concrete spec or HTML review report.
