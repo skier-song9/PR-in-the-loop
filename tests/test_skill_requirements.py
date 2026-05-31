@@ -1,4 +1,10 @@
-"""DocString Spec Excerpt: Lock issue-language, docstring worker model/effort, parallel spawn, and install config requirements without changing runtime workflow behavior."""
+"""DocString Spec Excerpt: Lock issue-language, docstring worker model/effort, parallel spawn, install config, and Issue #11 multi-review HTML language requirements without changing runtime workflow behavior.
+
+Context: Issue #11 adds regression coverage for multi-review HTML language detection and template placeholders.
+References: Issue #11; https://github.com/skier-song9/PR-in-the-loop/issues/11.
+Work Process: Assert exact strings in the skill and template so report language policy cannot regress silently.
+Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_review_html_requires_language_detection_and_template_language_placeholders
+"""
 
 from __future__ import annotations
 
@@ -244,6 +250,86 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("#f5f4ed", text)
         self.assertIn("#1B365D", text)
         self.assertIn("class=\"review-shell\"", template)
+
+    def test_multi_review_html_requires_language_detection_and_template_language_placeholders(self) -> None:
+        text = read_skill("multi-review-html")
+        template = read_reference("multi-review-html", "html-report-template.md")
+
+        self.assertIn("Language Rule", text)
+        self.assertIn("User Language Detection", text)
+        self.assertIn("Before writing the HTML report", text)
+        self.assertIn("Inspect the current user request first", text)
+        self.assertIn("Inspect surrounding conversation only as supporting evidence", text)
+        self.assertIn("If the current user request is mostly one natural language, use that language", text)
+        self.assertIn("If the conversation is mixed, use the language the user used when asking for review or report generation", text)
+        self.assertIn("If the user explicitly names a target language, use that language", text)
+        self.assertIn("Explicit target-language requests override other detection signals.", text)
+        self.assertIn("For DETECTED_LANGUAGE_BCP47, emit a valid BCP 47 language tag; prefer regional tags when the user names a regional variant, and use en when language detection remains ambiguous.", text)
+        self.assertIn("current user request", text)
+        self.assertIn("surrounding conversation", text)
+        self.assertIn("Keep the detected user language fixed for the whole HTML report", text)
+        self.assertIn("Apply the detected user language to report title, summary, reviewer evidence, findings, next actions, status text, metric labels, table headings, metadata, and narrative copy", text)
+        self.assertIn("Preserve code identifiers, file paths, commands, quoted errors, and reviewer verdict keywords exactly", text)
+        self.assertIn("Reviewer verdict keywords and severity contract names remain visible as contract values", text)
+        self.assertIn("adjacent labels, explanations, and prose use the detected user language", text)
+        self.assertIn("Preserve reviewer verdict keywords exactly when reviewers provide contract keywords such as `APPROVED` or `NOT_APPLICABLE`", text)
+        self.assertIn("Exact verdict keywords may appear as bare keywords or as leading verdict prefixes such as `APPROVED:` or `NOT_APPLICABLE:`; preserve the keyword, and use detected-language prose for the adjacent reason/status.", text)
+        self.assertIn("Do not invent reviewer verdict keywords for reviewers that report findings; use detected-language status prose and the finding evidence instead", text)
+        self.assertIn("When a reviewer uses a clear no-issue or not-applicable phrase without an exact verdict keyword, classify it for the summary count using detected-language status prose, but do not present an invented verdict keyword as quoted reviewer output.", text)
+        self.assertIn("Keep severity contract names visible for findings, with localized adjacent labels/prose", text)
+        self.assertIn("Before substituting dynamic values into HTML, HTML-escape reviewer evidence, findings, test output, commands, file paths, quoted errors, and narrative text.", text)
+        self.assertIn("Preservation rules apply after required HTML escaping.", text)
+        self.assertIn("This detection policy intentionally mirrors the GitHub issue planning language rules locally because skills load independently; keep semantic changes synchronized across language-aware workflow skills.", text)
+        self.assertIn("include counts for severity buckets (Critical, Important, Minor) and reviewer verdict buckets (Approved, Not Applicable)", text)
+        self.assertIn("Use `references/html-report-template.md` for structure, then replace all placeholder language markers and sample copy with detected-language report text", text)
+
+        self.assertIn("DETECTED_LANGUAGE_BCP47", template)
+        self.assertIn("DETECTED_LANGUAGE_REPORT_TITLE", template)
+        self.assertIn("DETECTED_LANGUAGE_METADATA_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_HEADER_NARRATIVE_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_SUMMARY_HEADING", template)
+        self.assertIn("DETECTED_LANGUAGE_CRITICAL_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_IMPORTANT_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_MINOR_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_APPROVED_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_NOT_APPLICABLE_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_SUMMARY_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_REVIEWER_COLUMN", template)
+        self.assertIn("DETECTED_LANGUAGE_STATUS_COLUMN", template)
+        self.assertIn("DETECTED_LANGUAGE_EVIDENCE_COLUMN", template)
+        self.assertIn("DETECTED_LANGUAGE_STATUS_TEXT", template)
+        self.assertIn("OPTIONAL_REVIEWER_VERDICT_BADGE_HTML", template)
+        self.assertIn("DETECTED_LANGUAGE_REVIEWER_NAME", template)
+        self.assertIn("DETECTED_LANGUAGE_REVIEWER_EVIDENCE_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_CHANGED_FILES_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_CHANGED_FILES_STATUS_TEXT", template)
+        self.assertIn("CHANGED_FILES_ROWS_HTML", template)
+        self.assertIn("DETECTED_LANGUAGE_TEST_COMMANDS_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_TEST_STATUS_TEXT", template)
+        self.assertIn("TEST_COMMAND_ROWS_HTML", template)
+        self.assertIn("DETECTED_LANGUAGE_FINDINGS_HEADING", template)
+        self.assertIn("DETECTED_LANGUAGE_FINDING_TITLE", template)
+        self.assertIn("REVIEWER_SEVERITY_CONTRACT_VALUE", template)
+        self.assertIn("SEVERITY_CLASS_NAME", template)
+        self.assertIn("DETECTED_LANGUAGE_LOCATION_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_EVIDENCE_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_FINDING_EVIDENCE_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_IMPACT_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_FINDING_IMPACT_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_EXAMPLE_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_FINDING_EXAMPLE_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_FIX_LABEL", template)
+        self.assertIn("DETECTED_LANGUAGE_FINDING_FIX_TEXT", template)
+        self.assertIn("DETECTED_LANGUAGE_NEXT_ACTIONS_HEADING", template)
+        self.assertIn("DETECTED_LANGUAGE_NEXT_ACTIONS_TEXT", template)
+        self.assertIn("Replace every visible sample label and sentence with detected-language report text before saving the report", template)
+        self.assertIn("OPTIONAL_REVIEWER_VERDICT_BADGE_HTML may be omitted when no exact verdict keyword or leading verdict prefix exists; DETECTED_LANGUAGE_STATUS_TEXT must still explain the status classification.", template)
+        self.assertIn("CHANGED_FILES_ROWS_HTML must contain one escaped table row per changed file.", template)
+        self.assertIn("TEST_COMMAND_ROWS_HTML must contain one escaped table row per test command and result.", template)
+        self.assertIn("SEVERITY_CLASS_NAME must be critical, important, or minor and must match REVIEWER_SEVERITY_CONTRACT_VALUE.", template)
+        self.assertIn("HTML-escape every substituted value except OPTIONAL_REVIEWER_VERDICT_BADGE_HTML before saving the report.", template)
+        self.assertNotIn("OPTIONAL_REVIEWER_VERDICT_CONTRACT_VALUE", template)
+        self.assertNotIn('<html lang="ko">', template)
 
     def test_pr_message_writer_follows_user_language(self) -> None:
         text = read_skill("pr-message-writer")
