@@ -4,10 +4,10 @@ description: Use when implemented code needs independent typed reviewers and an 
 ---
 
 <!-- DocString Spec Excerpt
-Context: Issue #11 makes this skill own HTML review report language detection and user-facing report language rules.
-References: Issue #11; https://github.com/skier-song9/PR-in-the-loop/issues/11.
-Work Process: Add workflow instructions before report synthesis; keep code identifiers, paths, commands, quoted errors, and reviewer verdict keywords unchanged.
-Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_review_html_requires_language_detection_and_template_language_placeholders
+Context: Issue #8 makes this skill own safe parallel reviewer spawn rules and reviewer model/reasoning-effort selection. Issue #11 makes this skill own HTML review report language detection and user-facing report language rules.
+References: Issue #8; Issue #11; https://github.com/skier-song9/PR-in-the-loop/issues/8; https://github.com/skier-song9/PR-in-the-loop/issues/11.
+Work Process: Add reviewer dispatch policy before report synthesis; keep code identifiers, paths, commands, quoted errors, reviewer verdict keywords, and severity contract names unchanged.
+Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_view_code_review_requires_parallel_spawn_and_model_effort_policy
 -->
 
 # Multi View Code Review
@@ -75,7 +75,44 @@ Dispatch every reviewer prompt under `references/reviewers/` as a fresh reviewer
 - docs and PR context
 - security, idempotency, and deduplication
 
+Classify each reviewer task by difficulty and risk before dispatch, then choose its reviewer `model` and `reasoning_effort` from `Reviewer Model And Effort Selection`.
+
 Dispatch reviewers in parallel when the platform supports fresh subagents. Otherwise run them sequentially while keeping each prompt isolated. Do not skip a reviewer because the domain seems irrelevant; that reviewer should return `APPROVED` or `NOT_APPLICABLE` with a short reason when its domain does not apply.
+
+## Parallel Reviewer Spawn Policy
+
+Use parallel subagents for independent reviewer work when the platform supports fresh subagents.
+
+- Use parallel subagents for independent reviewer work.
+- Spawn one fresh reviewer subagent per reviewer task.
+- Reviewer subagents must be spawned with read-only permissions and tools.
+- Do not let multiple write-capable agents edit the same files.
+- Use read-only explorer agents for investigation-only support.
+- Assign each reviewer task a stable reviewer key before dispatch.
+- Accept at most one completed result for each reviewer task key.
+- A retry replaces the prior pending attempt for the same reviewer task key.
+- Ignore late duplicate results during consolidation.
+- Wait for all reviewer subagents, then consolidate the results.
+- Return a structured summary with findings, changed files, risks, and next actions.
+
+Read-only explorer dispatch is parent-controlled. Parent agents may use read-only explorer agents for investigation-only support, but reviewer subagents must not spawn nested subagents. If a reviewer needs extra investigation, the parent dispatches read-only exploration and feeds the result back into consolidation.
+
+Reviewers must not edit files. If review findings require code, docs, tests, or template changes, return the finding and suggested fix in the review result; the parent or a separate implementation workflow owns any write-capable follow-up.
+
+## Reviewer Model And Effort Selection
+
+Set `model` and `reasoning_effort` when spawning each reviewer if the platform supports overrides. Spawned reviewers inherit the parent model and effort only when no explicit override is appropriate or when the platform lacks override support.
+
+Choose the smallest capable model/effort pair for each reviewer task:
+
+- docs and PR context checks: `gpt-5.4-mini` or `gpt-5.3-codex-spark` + `medium`
+- spec compliance and general code quality review: `gpt-5.4` + `medium` or `high`
+- security, idempotency, data contract, or ADK/agent architecture review: `gpt-5.4` + `high`
+- high-uncertainty, cross-system, or security-critical review: `gpt-5.5` + `high` or `xhigh`
+
+Record the selected model, selected reasoning effort, and selection reason in the reviewer spawn metadata. If a reviewer task is misclassified before dispatch, raise the model/effort before spawning instead of accepting a weak review result.
+
+Subagents cannot reliably self-attest their actual runtime model or reasoning effort from inside their visible context. Verify model/effort selection from the spawn request, accepted tool arguments, and retained reviewer spawn metadata rather than from reviewer self-report alone.
 
 ## Finding Contract
 
