@@ -24,7 +24,7 @@ codex plugin add pr-in-the-loop@pr-in-the-loop
 PR In The Loop는 Codex 개발 워크플로우를 설치 가능한 플러그인으로 묶는다. 핵심 플러그인인 `pr-in-the-loop`는 Superpowers식 개발 흐름을 유지한다.
 
 1. 문제를 인식하고 GitHub Issue를 만들거나 draft로 작성한 뒤, PR 계획 전 명시적 승인에서 멈춘다.
-2. 승인 후 `docs/` 아래에 사람이 리뷰하는 PR 계획 문서를 작성한다.
+2. 승인 후 `docs/pr-plans/` 아래에 사람이 리뷰하는 짧은 PR 계획 문서를 작성한다.
 3. 승인된 PR 계획을 커밋하지 않는 구현 spec으로 변환한다.
 4. 파일별 책임을 DocString/comment로 위임하고 fresh subagent에게 구현을 맡긴다.
 5. 유형별 reviewer subagent를 병렬 호출해 HTML 리뷰 보고서를 만든다.
@@ -63,7 +63,7 @@ codex plugin add pr-in-the-loop@pr-in-the-loop
 ## The Basic Workflow
 
 1. `pr-in-the-loop:issue` - repo 맥락을 확인하고 GitHub Issue를 만들거나 draft로 작성한 뒤 멈춘다. PR 계획 단계로 이동하려면 명시적 사용자 승인이 필요하다.
-2. `pr-in-the-loop:planning-pr` - 승인된 PR 계획을 Superpowers planning 규칙에 맞춰 구체적인 구현 spec으로 바꾼다. spec은 사람이 리뷰하지 않고 커밋하지 않는다.
+2. `pr-in-the-loop:planning-pr` - 승인된 Issue를 읽고 접근안을 구체화한 뒤 `docs/pr-plans/` 아래에 사람이 리뷰하는 짧은 PR 계획 문서를 작성한다.
 3. `pr-in-the-loop:parallel-development` - spec의 파일별 책임을 짧은 DocString/comment로 옮기고, 안전한 파일 그룹만 fresh subagent에게 병렬 위임한다.
 4. `pr-in-the-loop:multi-view-code-review` - 유형별 reviewer subagent를 병렬 실행하고 `docs/reviews/` 아래 HTML 보고서 하나로 합친다.
 5. `pr-in-the-loop:open-pr` - 사람이 리뷰 상태를 승인한 뒤 근거 기반 PR 메시지를 작성한다.
@@ -82,7 +82,7 @@ codex plugin add pr-in-the-loop@pr-in-the-loop
 |---|---|
 | `pr-in-the-loop:github-dev-workflow` | Issue-to-PR 전체 흐름을 실행할 때. |
 | `pr-in-the-loop:issue` | 문제에서 시작해 GitHub Issue를 만들거나 draft로 작성하고 PR planning 전에 멈출 때. |
-| `pr-in-the-loop:planning-pr` | 승인된 PR 계획을 구체적이고 커밋하지 않는 구현 spec으로 바꿀 때. |
+| `pr-in-the-loop:planning-pr` | 승인된 Issue를 짧고 사람이 리뷰하는 PR 계획 문서로 바꿀 때. |
 | `pr-in-the-loop:parallel-development` | 파일별 책임 위임과 안전한 subagent 구현이 필요할 때. |
 | `pr-in-the-loop:multi-view-code-review` | 유형별 reviewer subagent로 코드 리뷰하고 HTML 보고서를 만들 때. |
 | `pr-in-the-loop:open-pr` | 근거 기반 PR 메시지가 필요할 때. |
