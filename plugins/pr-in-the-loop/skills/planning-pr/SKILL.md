@@ -42,7 +42,6 @@ Before writing the PR plan, remove ambiguity with the same discipline as `superp
 8. Name the file `issue-[issue number]-[issue title]-pr-[pr number].md`. Keep the Issue title portion readable and filesystem-safe.
 9. Use `references/pr-plan-template.md` as the minimum required structure. Translate template headings and helper text to the detected user language unless the human supplied exact headings. Add optional sections only when the Issue needs them, such as db schema, API contract, migration order, or architecture sequence diagram.
 10. Stop for human review. Do not create a concrete implementation spec, code, branch, commit, or pull request in this skill.
-11. If the next workflow skill requires a concrete implementation spec and none exists, stop and request that artifact; this skill still must not create it.
 
 ## Redaction And Plan Write Safety Gate
 
@@ -62,4 +61,4 @@ The PR plan must include these four section meanings in the detected user langua
 - `## 이번 단계에 포함하지 않는 것`
 - `## 테스트 목표`
 
-Do not pad the plan with long clarification notes, rejected implementation detail, or concrete task-by-task spec content. The PR plan should be short enough for human review while still making reviewer scope clear.
+Do not pad the plan with long clarification notes, rejected implementation detail, or concrete task-by-task spec content. The PR plan should be short enough for human review while still making reviewer scope clear. `pr-in-the-loop:parallel-development` owns the uncommitted concrete spec after this plan is approved.

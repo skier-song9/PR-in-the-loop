@@ -5,7 +5,7 @@ Translate the headings and helper text to the detected user language unless the 
 ```markdown
 # [document title]
 > For agentic workers: REQUIRED SUB-SKILL: Use `pr-in-the-loop:parallel-development`.
-> This PR plan is not implementation permission. Continue only after human approval; if `parallel-development` still requires a concrete spec and none exists, stop and request that artifact.
+> This PR plan is not implementation permission. Continue only after human approval; `pr-in-the-loop:parallel-development` creates the uncommitted concrete spec before implementation.
 
 ## 목표
 [이번 PR 에서 달성해야 하는 항목들을 작성한다.]
