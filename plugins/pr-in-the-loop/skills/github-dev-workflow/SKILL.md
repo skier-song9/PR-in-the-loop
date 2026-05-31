@@ -10,7 +10,7 @@ Run the user's GitHub work loop while preserving the Superpowers spine.
 ## Required Order
 
 1. **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming` discipline through `pr-in-the-loop:issue`.
-2. **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` discipline through `pr-in-the-loop:planning-pr`.
+2. **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming` discipline through `pr-in-the-loop:planning-pr` to turn the Issue-defined task into a human-reviewed PR plan.
 3. **REQUIRED SUB-SKILL:** Use `superpowers:subagent-driven-development` discipline through `pr-in-the-loop:parallel-development`.
 4. **REQUIRED SUB-SKILL:** Use `superpowers:requesting-code-review` discipline through `pr-in-the-loop:multi-view-code-review`.
 5. Use `pr-in-the-loop:open-pr` after the human accepts the HTML review or confirms no more fixes remain. When the user asks the agent to prepare the completed work as a pull request, use `pr-in-the-loop:open-pr` before creating or publishing the pull request.
@@ -20,8 +20,10 @@ If a Superpowers skill is unavailable, follow the same gate locally and report t
 ## Gates
 
 - Do not implement before a GitHub Issue exists or an issue draft is explicitly accepted as dry-run output.
-- After `pr-in-the-loop:issue`, create or draft a GitHub Issue, then stop at the Issue boundary; starting the separate `pr-in-the-loop:planning-pr` PR-plan step requires explicit human approval. If `planning-pr` still requires an approved PR plan artifact and none exists, stop and request that artifact instead of inventing one.
+- After `pr-in-the-loop:issue`, create or draft a GitHub Issue, then stop at the Issue boundary; starting the separate `pr-in-the-loop:planning-pr` PR-plan step requires explicit human approval.
+- Do not write a PR plan until a GitHub Issue exists or an issue draft is explicitly accepted and the human approves the planning step.
 - Do not write a concrete implementation spec until the PR plan markdown has been human-reviewed and approved.
+- If the next workflow skill requires a concrete implementation spec and none exists, stop and request that artifact instead of inventing one.
 - Do not implement until a concrete spec exists and traces back to the approved PR plan.
 - Do not commit the concrete spec or HTML review report.
 - Do not draft the PR message until review findings are resolved or deferred by the human.
