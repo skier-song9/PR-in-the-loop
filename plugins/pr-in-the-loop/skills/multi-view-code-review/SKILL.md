@@ -1,5 +1,5 @@
 ---
-name: multi-review-html
+name: multi-view-code-review
 description: Use when implemented code needs independent typed reviewers and an HTML review report.
 ---
 
@@ -10,7 +10,7 @@ Work Process: Add workflow instructions before report synthesis; keep code ident
 Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_review_html_requires_language_detection_and_template_language_placeholders
 -->
 
-# Multi Review HTML
+# Multi View Code Review
 
 Run code review with multiple fresh reviewer subagents, then synthesize one HTML report.
 

@@ -1,3 +1,3 @@
 interface:
-  display_name: "GitHub Issue PR Planning"
+  display_name: "Issue"
   short_description: "Create an issue and human-reviewed PR plan"

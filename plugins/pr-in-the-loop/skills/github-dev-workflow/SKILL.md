@@ -9,11 +9,11 @@ Run the user's GitHub work loop while preserving the Superpowers spine.
 
 ## Required Order
 
-1. **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming` discipline through `pr-in-the-loop:github-issue-pr-planning`.
-2. **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` discipline through `pr-in-the-loop:pr-plan-to-spec`.
-3. **REQUIRED SUB-SKILL:** Use `superpowers:subagent-driven-development` discipline through `pr-in-the-loop:docstring-parallel-implementation`.
-4. **REQUIRED SUB-SKILL:** Use `superpowers:requesting-code-review` discipline through `pr-in-the-loop:multi-review-html`.
-5. Use `pr-in-the-loop:pr-message-writer` after the human accepts the HTML review or confirms no more fixes remain. When the user asks the agent to prepare the completed work as a pull request, use `pr-in-the-loop:pr-message-writer` before creating or publishing the pull request.
+1. **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming` discipline through `pr-in-the-loop:issue`.
+2. **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` discipline through `pr-in-the-loop:planning-pr`.
+3. **REQUIRED SUB-SKILL:** Use `superpowers:subagent-driven-development` discipline through `pr-in-the-loop:parallel-development`.
+4. **REQUIRED SUB-SKILL:** Use `superpowers:requesting-code-review` discipline through `pr-in-the-loop:multi-view-code-review`.
+5. Use `pr-in-the-loop:open-pr` after the human accepts the HTML review or confirms no more fixes remain. When the user asks the agent to prepare the completed work as a pull request, use `pr-in-the-loop:open-pr` before creating or publishing the pull request.
 
 If a Superpowers skill is unavailable, follow the same gate locally and report the fallback.
 
