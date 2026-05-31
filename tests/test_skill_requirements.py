@@ -132,14 +132,42 @@ class SkillRequirementTests(unittest.TestCase):
                 retired_part,
             )
 
-    def test_issue_pr_planning_requires_session_language_and_ambiguity_gate(self) -> None:
+    def test_issue_skill_is_issue_only_and_requires_planning_pr_approval(self) -> None:
         text = read_skill("issue")
+        agent = (SKILLS / "issue" / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        dev_workflow = read_skill("github-dev-workflow")
+        readme = read_root_file("README.md")
+        readme_ko = read_root_file("README.ko.md")
 
         self.assertIn("detected user language", text)
         self.assertIn("Ambiguity Gate", text)
-        self.assertIn("Do not create the Issue or PR plan while blocking ambiguity remains", text)
+        self.assertIn("Create or draft the GitHub Issue only", text)
+        self.assertIn("Do not create the Issue while blocking ambiguity remains", text)
+        self.assertIn("Do not write a PR plan", text)
+        self.assertIn("Stop after the Issue exists or the issue draft is accepted", text)
+        self.assertIn("Starting the separate `pr-in-the-loop:planning-pr` PR-plan step requires explicit human approval", text)
+        self.assertIn("If the next workflow skill requires an approved PR plan artifact and none exists, stop and request that artifact", text)
+        self.assertIn("Do not create a spec, code, branch, commit, or PR", text)
+        self.assertIn("Redaction And Write Safety Gate", text)
+        self.assertIn("Redact or summarize secrets, credentials, tokens, personal data, private URLs, and absolute local paths", text)
+        self.assertIn("Issue create or update targets must match the current repository remote", text)
+        self.assertIn("Before creating a new Issue, search current-repo open Issues for the same title", text)
+        self.assertIn("After creation, treat the Issue URL and number as the idempotency key", text)
+        self.assertNotIn("Create the problem record and PR plan", text)
+        self.assertNotIn("Write a PR plan markdown file", text)
+        self.assertNotIn("PR Plan Requirements", text)
+        self.assertNotIn("references/pr-plan-template.md", text)
+        self.assertIn("Create or draft a GitHub Issue only", agent)
+        self.assertIn("Do not write a PR plan", agent)
+        self.assertIn("create or draft a GitHub Issue, then stop", dev_workflow)
+        self.assertIn("requires explicit human approval", dev_workflow)
+        self.assertIn("requires an approved PR plan artifact and none exists", dev_workflow)
+        self.assertIn("identify a problem and create or draft a GitHub Issue, then stop for explicit approval before PR planning", readme)
+        self.assertIn("문제를 인식하고 GitHub Issue를 만들거나 draft로 작성한 뒤, PR 계획 전 명시적 승인에서 멈춘다", readme_ko)
+        self.assertIn("create or draft a GitHub Issue, then stop", readme)
+        self.assertIn("GitHub Issue를 만들거나 draft로 작성한 뒤 멈춘다", readme_ko)
 
-    def test_issue_pr_planning_requires_issue_language_detection(self) -> None:
+    def test_issue_language_detection_applies_only_to_issue_artifacts(self) -> None:
         text = read_skill("issue")
 
         self.assertIn("User Language Detection", text)
@@ -148,14 +176,15 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("surrounding conversation", text)
         self.assertIn("If the conversation is mixed", text)
         self.assertIn("If the user explicitly names a target language, use that language", text)
-        self.assertIn("Apply the detected language to the Issue title, Issue body, and PR plan", text)
-        self.assertIn("Preserve repository identifiers, code symbols, commands, file paths, links, and quoted output exactly", text)
+        self.assertIn("Apply the detected language to the Issue title and Issue body", text)
+        self.assertNotIn("Apply the detected language to the Issue title, Issue body, and PR plan", text)
+        self.assertIn("Preserve repository identifiers, code symbols, commands, file paths, links, and quoted output exactly except for required Redaction And Write Safety Gate edits", text)
         self.assertIn("ask one concise question in the detected user language", text)
         self.assertIn("recommend one in the detected user language", text)
         self.assertIn("The Issue title and Issue body must use the detected user language and the Issue Template", text)
-        self.assertIn("using the detected user language", text)
+        self.assertIn("unless the user explicitly corrects the target Issue language", text)
 
-    def test_issue_pr_planning_requires_issue_template(self) -> None:
+    def test_issue_skill_requires_issue_template(self) -> None:
         text = read_skill("issue")
 
         self.assertIn("Issue Template", text)
@@ -170,12 +199,13 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("Fill `Tasks` with concrete checkbox items from the clarified scope", text)
         self.assertIn("Fill `References` with relevant links, related Issues or PRs, source files, or `None`", text)
 
-    def test_pr_plan_template_has_clarification_status_and_language_instruction(self) -> None:
-        text = read_reference("issue", "pr-plan-template.md")
+    def test_issue_skill_no_longer_owns_pr_plan_template(self) -> None:
+        text = read_skill("issue")
+        template_path = SKILLS / "issue" / "references" / "pr-plan-template.md"
 
-        self.assertIn("Write this PR plan in the agent conversation session's primary language", text)
-        self.assertIn("## Clarification Notes", text)
-        self.assertIn("Status: ambiguity-resolved", text)
+        self.assertFalse(template_path.exists())
+        self.assertNotIn("PR Plan Requirements", text)
+        self.assertNotIn("pr-plan-template.md", text)
 
     def test_planning_pr_requires_english_output(self) -> None:
         text = read_skill("planning-pr")
