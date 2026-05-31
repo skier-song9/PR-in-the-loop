@@ -1,9 +1,9 @@
-"""DocString Spec Excerpt: Lock issue-language, parallel-development worker model/effort, parallel spawn, install config, and Issue #11 multi-view-code-review HTML language requirements without changing runtime workflow behavior.
+"""DocString Spec Excerpt: Lock issue-language, parallel-development worker model/effort, parallel spawn, install config, Issue #8 multi-view-code-review reviewer dispatch policy, and Issue #11 multi-view-code-review HTML language requirements without changing runtime workflow behavior.
 
-Context: Issue #11 adds regression coverage for multi-view-code-review HTML language detection and template placeholders.
-References: Issue #11; https://github.com/skier-song9/PR-in-the-loop/issues/11.
-Work Process: Assert exact strings in the skill and template so report language policy cannot regress silently.
-Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_view_code_review_requires_language_detection_and_template_language_placeholders
+Context: Issue #8 adds regression coverage for multi-view-code-review reviewer spawn and model/effort policy. Issue #11 adds regression coverage for multi-view-code-review HTML language detection and template placeholders.
+References: Issue #8; Issue #11; https://github.com/skier-song9/PR-in-the-loop/issues/8; https://github.com/skier-song9/PR-in-the-loop/issues/11.
+Work Process: Assert exact strings in the skill and template so reviewer dispatch and report language policy cannot regress silently.
+Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_view_code_review_requires_parallel_spawn_and_model_effort_policy
 """
 
 from __future__ import annotations
@@ -320,6 +320,41 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("#f5f4ed", text)
         self.assertIn("#1B365D", text)
         self.assertIn("class=\"review-shell\"", template)
+
+    def test_multi_view_code_review_requires_parallel_spawn_and_model_effort_policy(self) -> None:
+        text = read_skill("multi-view-code-review")
+
+        self.assertIn("Parallel Reviewer Spawn Policy", text)
+        self.assertIn("Classify each reviewer task by difficulty and risk before dispatch", text)
+        self.assertIn("Use parallel subagents for independent reviewer work", text)
+        self.assertIn("Spawn one fresh reviewer subagent per reviewer task", text)
+        self.assertIn("Reviewer subagents must be spawned with read-only permissions and tools", text)
+        self.assertIn("Do not let multiple write-capable agents edit the same files", text)
+        self.assertIn("Use read-only explorer agents for investigation-only support", text)
+        self.assertIn("Read-only explorer dispatch is parent-controlled", text)
+        self.assertIn("Assign each reviewer task a stable reviewer key before dispatch", text)
+        self.assertIn("Accept at most one completed result for each reviewer task key", text)
+        self.assertIn("A retry replaces the prior pending attempt for the same reviewer task key", text)
+        self.assertIn("Ignore late duplicate results during consolidation", text)
+        self.assertIn("Wait for all reviewer subagents, then consolidate the results", text)
+        self.assertIn("Return a structured summary with findings, changed files, risks, and next actions", text)
+        self.assertIn("Reviewers must not edit files", text)
+        self.assertIn("Reviewer Model And Effort Selection", text)
+        self.assertIn("Set `model` and `reasoning_effort` when spawning each reviewer", text)
+        self.assertIn("Spawned reviewers inherit the parent model and effort only when no explicit override is appropriate or when the platform lacks override support", text)
+        self.assertIn("docs and PR context checks", text)
+        self.assertIn("`gpt-5.4-mini` or `gpt-5.3-codex-spark` + `medium`", text)
+        self.assertIn("spec compliance and general code quality review", text)
+        self.assertIn("`gpt-5.4` + `medium` or `high`", text)
+        self.assertIn("security, idempotency, data contract, or ADK/agent architecture review", text)
+        self.assertIn("`gpt-5.4` + `high`", text)
+        self.assertIn("high-uncertainty, cross-system, or security-critical review", text)
+        self.assertIn("`gpt-5.5` + `high` or `xhigh`", text)
+        self.assertIn("Choose the smallest capable model/effort pair for each reviewer task", text)
+        self.assertIn("Record the selected model, selected reasoning effort, and selection reason in the reviewer spawn metadata", text)
+        self.assertIn("If a reviewer task is misclassified before dispatch, raise the model/effort before spawning instead of accepting a weak review result", text)
+        self.assertIn("Subagents cannot reliably self-attest their actual runtime model or reasoning effort", text)
+        self.assertIn("Verify model/effort selection from the spawn request, accepted tool arguments, and retained reviewer spawn metadata", text)
 
     def test_multi_view_code_review_requires_language_detection_and_template_language_placeholders(self) -> None:
         text = read_skill("multi-view-code-review")
