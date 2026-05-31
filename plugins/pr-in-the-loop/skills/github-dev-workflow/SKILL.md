@@ -13,7 +13,7 @@ Run the user's GitHub work loop while preserving the Superpowers spine.
 2. **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming` discipline through `pr-in-the-loop:planning-pr` to turn the Issue-defined task into a human-reviewed PR plan.
 3. **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` and `superpowers:subagent-driven-development` discipline to generate the uncommitted concrete spec through `pr-in-the-loop:parallel-development`, then implement it.
 4. **REQUIRED SUB-SKILL:** Use `superpowers:requesting-code-review` discipline through `pr-in-the-loop:multi-view-code-review`.
-5. Use `pr-in-the-loop:open-pr` after the human accepts the HTML review or confirms no more fixes remain. When the user asks the agent to prepare the completed work as a pull request, use `pr-in-the-loop:open-pr` before creating or publishing the pull request.
+5. Use `pr-in-the-loop:open-pr` after the human accepts the HTML review or confirms no more fixes remain. When the user asks the agent to prepare the completed work as a pull request, use `pr-in-the-loop:open-pr` before creating or publishing the pull request; the workflow will draft the PR body and open the GitHub pull request unless the human explicitly opted out.
 
 If a Superpowers skill is unavailable, follow the same gate locally and report the fallback.
 
@@ -26,7 +26,7 @@ If a Superpowers skill is unavailable, follow the same gate locally and report t
 - Generate the concrete implementation spec through `pr-in-the-loop:parallel-development`; do not commit that spec.
 - Do not implement until the generated concrete spec exists and traces back to the approved PR plan.
 - Do not commit the concrete spec or HTML review report.
-- Do not draft the PR message until review findings are resolved or deferred by the human.
+- Do not draft the PR message or open the GitHub pull request until review findings are resolved or deferred by the human.
 
 ## Evidence Rules
 
@@ -39,5 +39,5 @@ If a Superpowers skill is unavailable, follow the same gate locally and report t
 At every handoff, report:
 
 - current artifact path or GitHub URL
-- gate status: `needs-human-review`, `ready-for-spec`, `ready-for-implementation`, `ready-for-review`, `ready-for-pr-message`, or `complete`
+- gate status: `needs-human-review`, `ready-for-spec`, `ready-for-implementation`, `ready-for-review`, `ready-for-pr-message`, `needs-commit-or-push`, or `complete`
 - next required skill or human action

@@ -515,6 +515,7 @@ class SkillRequirementTests(unittest.TestCase):
         text = read_skill("open-pr")
 
         self.assertIn("user's primary language", text)
+        self.assertIn("quoted output unchanged except for required PR Write Safety Gate redactions", text)
         self.assertNotIn("Korean template by default", text)
 
     def test_open_pr_triggers_for_pull_request_preparation_intent(self) -> None:
@@ -526,6 +527,42 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("before any pull request creation or publication flow", text)
         self.assertIn("Open PR is the mandatory evidence-to-PR-body step", text)
         self.assertIn("use `pr-in-the-loop:open-pr` before creating or publishing the pull request", dev_workflow)
+
+    def test_open_pr_creates_github_pr_by_default_with_opt_out(self) -> None:
+        text = read_skill("open-pr")
+        agent = (SKILLS / "open-pr" / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        dev_workflow = read_skill("github-dev-workflow")
+        readme = read_root_file("README.md")
+        readme_ko = read_root_file("README.ko.md")
+
+        self.assertIn("Draft the final PR message and open the GitHub pull request by default", text)
+        self.assertIn("unless the human explicitly says not to open a GitHub PR", text)
+        self.assertIn("Only skip GitHub PR creation when the human explicitly opts out", text)
+        self.assertIn("If the human opted out, return the PR message draft, intended base/head, and gate status `complete`", text)
+        self.assertIn("Use the GitHub plugin/app first, then `gh` CLI as fallback", text)
+        self.assertIn("When using `gh` fallback, pass explicit repository, base, head, title, and sanitized body arguments", text)
+        self.assertIn("Do not use `--fill` for fallback PR creation", text)
+        self.assertIn("Verify the reviewed changes are committed on the head branch and pushed to the remote before opening the PR", text)
+        self.assertIn("If the reviewed changes are not committed or pushed, report gate status `needs-commit-or-push`", text)
+        self.assertIn("Open the pull request after drafting the PR message", text)
+        self.assertIn("Report the PR URL, gate status `complete`, and any remaining follow-ups", text)
+        self.assertIn("Draft PR bodies and open GitHub PRs by default", agent)
+        self.assertIn("open the GitHub pull request unless the human explicitly opted out", dev_workflow)
+        self.assertIn("needs-commit-or-push", dev_workflow)
+        self.assertIn("open the GitHub PR by default", readme)
+        self.assertIn("기본적으로 GitHub PR까지 연다", readme_ko)
+
+    def test_open_pr_requires_write_safety_and_idempotency(self) -> None:
+        text = read_skill("open-pr")
+
+        self.assertIn("PR Write Safety Gate", text)
+        self.assertIn("Redact or summarize secrets, credentials, tokens, personal data, private URLs, and absolute local paths", text)
+        self.assertIn("Pull request base and head repositories must match the current repository remote", text)
+        self.assertIn("Before creating a pull request, check for an existing open PR for the same head branch", text)
+        self.assertIn("If reviewed local changes are not committed and pushed to the PR head branch, stop before creating the PR", text)
+        self.assertIn("Reuse an existing PR only when its Issue reference, title/body marker, head owner/repo, base branch, and intended base SHA match", text)
+        self.assertIn("After creation, treat the PR URL and number as the idempotency key", text)
+        self.assertIn("Do not create duplicate PRs on retry", text)
 
 
 if __name__ == "__main__":

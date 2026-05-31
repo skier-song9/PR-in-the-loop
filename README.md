@@ -28,7 +28,7 @@ PR In The Loop packages Codex workflows as installable plugins. The main plugin,
 3. generate an uncommitted implementation spec from the approved PR plan
 4. delegate file-scoped work through fresh subagents
 5. run typed parallel code review into an HTML report
-6. draft a PR message from real issue, diff, test, and review evidence
+6. draft a PR message from real issue, diff, test, and review evidence, then open the GitHub PR by default
 
 The goal is not full automation. The human stays in the loop at the decisions that matter: PR scope, review findings, and final PR context.
 
@@ -66,7 +66,7 @@ Open a new Codex thread after updating, then invoke `$pr-in-the-loop:github-dev-
 2. `pr-in-the-loop:planning-pr` - read the approved Issue, clarify the approach, and write a concise human-reviewed PR plan under `docs/pr-plans/`.
 3. `pr-in-the-loop:parallel-development` - generate an uncommitted implementation spec from the approved PR plan, copy each file's responsibility into a short DocString or comment, then dispatch safe file groups to fresh subagents.
 4. `pr-in-the-loop:multi-view-code-review` - run typed reviewer subagents in parallel and synthesize one HTML report under `docs/reviews/`.
-5. `pr-in-the-loop:open-pr` - draft the final PR message after the human accepts the review state.
+5. `pr-in-the-loop:open-pr` - draft the final PR message after the human accepts the review state, then open the GitHub PR by default unless the human explicitly opts out.
 
 ## What's Inside
 
@@ -85,7 +85,7 @@ Open a new Codex thread after updating, then invoke `$pr-in-the-loop:github-dev-
 | `pr-in-the-loop:planning-pr` | Turn an approved Issue into a concise, human-reviewed PR plan. |
 | `pr-in-the-loop:parallel-development` | Generate an uncommitted implementation spec from a PR plan, then implement it with file-scoped delegation and safe subagents. |
 | `pr-in-the-loop:multi-view-code-review` | Review code through typed subagents and write one HTML report. |
-| `pr-in-the-loop:open-pr` | Draft a PR message from evidence. |
+| `pr-in-the-loop:open-pr` | Draft a PR message from evidence and open the GitHub PR by default. |
 
 ### Reviewer Types
 
