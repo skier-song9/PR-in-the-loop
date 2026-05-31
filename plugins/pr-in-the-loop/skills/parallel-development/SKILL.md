@@ -1,31 +1,55 @@
 ---
 name: parallel-development
-description: Use when implementing a concrete spec from an approved PR plan with file-scoped delegation and subagents.
+description: Use when implementing from a human-approved PR plan by first generating an uncommitted concrete spec, then delegating file-scoped work to subagents.
 ---
 
 <!-- DocString Spec Excerpt: Require context-rich delegated file-level comments while preserving parallel spawn, model/effort selection, and structured worker summaries. -->
 
 # Parallel Development
 
-Implement from a concrete spec by delegating responsibility into target files, then assigning fresh subagents.
+Generate a concrete implementation spec from a human-approved PR plan, then delegate responsibility into target files and assign fresh subagents.
 
+**REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` discipline only to generate the concrete implementation spec from the approved PR plan.
 **REQUIRED SUB-SKILL:** Use `superpowers:subagent-driven-development` for task/review discipline; the parallel policy in this skill supersedes the sub-skill's sequential default only for proven disjoint safe file groups.
 **REQUIRED SUB-SKILL FOR IMPLEMENTATION WORKERS:** Use `superpowers:test-driven-development`. Investigation-only workers stay read-only and do not use test-driven development.
 
+## Preconditions
+
+- A human-approved PR plan markdown file exists.
+- The target PR boundary is known when one Issue has multiple PRs.
+- The repository rules, Issue, PR plan, and relevant current files are available to read.
+
+If any precondition is missing, stop and request the missing artifact or approval.
+
 ## Process
 
-1. Verify the concrete spec traces to a human-approved PR plan, then read the plan, spec, repo rules, and relevant current files. Stop if the trace or approval is missing.
-2. Extract the write set: each changed source file, writable test, writable fixture, generated artifact, its responsibility, tests, and dependencies.
-3. Add a short file-level comment to each target file that explains the spec context and the responsibility delegated to that file. Apply this when the file format supports comments or docstrings. For commentless or generated artifacts, record the delegated context in the ownership ledger or nearest owning source/test file, mark the artifact as commentless, and use a path-keyed `COMMENTLESS` sentinel instead of editing the artifact.
-4. Partition work by safe ownership:
+1. Read the human-approved PR plan, linked Issue or accepted draft, repo rules, and relevant current files.
+2. Use `superpowers:writing-plans` discipline only to write a concrete implementation spec from the approved PR plan; do not stop for the writing-plans execution-choice handoff, do not ask for separate spec review, and do not commit the spec. The spec must stay within the approved PR scope and must not add work the plan excludes.
+3. Run the Redaction And Spec Write Safety Gate before writing, saving, or excerpting the spec.
+4. Save the generated spec under `docs/specs/` by default, unless the human specified another location.
+5. The generated spec markdown title must be followed immediately by this exact line: `> For agentic workers: Never commit this file.`
+6. Use `references/spec-template.md` as the minimum expected shape, then run placeholder scan and self-review for scope drift.
+7. Verify the generated spec is not staged, tracked, or committed before implementation and again before completion. Do not commit the spec.
+8. After the spec exists, continue with the existing file-level delegation flow: extract the write set from the spec, including each changed source file, writable test, writable fixture, generated artifact, its responsibility, tests, and dependencies.
+9. Add a short file-level comment to each target file that explains the spec context and the responsibility delegated to that file. Apply this when the file format supports comments or docstrings. For commentless or generated artifacts, record the delegated context in the ownership ledger or nearest owning source/test file, mark the artifact as commentless, and use a path-keyed `COMMENTLESS` sentinel instead of editing the artifact.
+10. Partition work by safe ownership:
    - parallel: disjoint source, test, and fixture files with independent tests and no shared generated artifact
    - sequential: shared schema, migration, public contract, shared tests, or uncertain ownership
-5. Before dispatch, create an ownership ledger that maps each worker to exactly one safe file group and confirms no writable path appears in more than one write-capable group. Then classify each safe file group by task difficulty and choose the worker `model` and `reasoning_effort` from `Subagent Model And Effort Selection`.
-6. Dispatch one fresh worker per safe file group, treating each safe file group as one subagent task. Set `model` and `reasoning_effort` when spawning each worker, and give each worker the selected model, selected reasoning effort, selection reason, full assigned file group as `ASSIGNED_PATHS`, delegated file-level comments by path, any `COMMENTLESS` sentinel paths, exact spec excerpt, tests to run, and no session history.
-7. Do not dispatch a worker until each target file either contains the delegated file-level comment with a DocString Spec Excerpt from the spec or is marked commentless in the ownership ledger or nearest owning source/test file.
-8. After each worker, record Subagent verification: the worker read delegated comments used by path, including any `COMMENTLESS` sentinels, stayed inside its assigned file group, reported whether it changed files outside ownership, ran its exact tests, and reported status. Parent verification must compare the actual changed paths against the ownership ledger and the worker's assigned file group. Do not rely only on the worker's self-report.
-9. After each worker, run spec-compliance review before code-quality review. Fix and re-review until both reviewer subagents approve.
-10. After all groups, run integration tests and a final review. The final consolidation must include findings, changed files, risks, and next actions. Complete only when tests and reviews pass, or report a blocker.
+11. Before dispatch, create an ownership ledger that maps each worker to exactly one safe file group and confirms no writable path appears in more than one write-capable group. Then classify each safe file group by task difficulty and choose the worker `model` and `reasoning_effort` from `Subagent Model And Effort Selection`.
+12. Dispatch one fresh worker per safe file group, treating each safe file group as one subagent task. Set `model` and `reasoning_effort` when spawning each worker, and give each worker the selected model, selected reasoning effort, selection reason, full assigned file group as `ASSIGNED_PATHS`, delegated file-level comments by path, any `COMMENTLESS` sentinel paths, exact spec excerpt, tests to run, and no session history.
+13. Do not dispatch a worker until each target file either contains the delegated file-level comment with a DocString Spec Excerpt from the spec or is marked commentless in the ownership ledger or nearest owning source/test file.
+14. After each worker, record Subagent verification: the worker read delegated comments used by path, including any `COMMENTLESS` sentinels, stayed inside its assigned file group, reported whether it changed files outside ownership, ran its exact tests, and reported status. Parent verification must compare the actual changed paths against the ownership ledger and the worker's assigned file group. Do not rely only on the worker's self-report.
+15. After each worker, run spec-compliance review before code-quality review. Fix and re-review until both reviewer subagents approve.
+16. After all groups, run integration tests and a final review. The final consolidation must include findings, changed files, risks, next actions, and confirmation that the generated spec is not staged, tracked, or committed. Complete only when tests and reviews pass, or report a blocker.
+
+## Redaction And Spec Write Safety Gate
+
+Before writing, updating, or excerpting a generated spec:
+
+- Redact or summarize secrets, credentials, tokens, personal data, private URLs, and absolute local paths from Issue context, PR plan context, logs, errors, links, quoted output, and references.
+- Before creating a new spec, search `docs/specs/` for an existing spec with the same Issue number and PR plan path.
+- If a matching spec exists, update that path only when the approved PR plan changed or the human explicitly requested regeneration; otherwise reuse it.
+- After creation, treat the generated spec path as the idempotency key. On retries, update that path instead of creating a duplicate spec with a different title slug.
 
 This skill intentionally improves speed only where disjoint file ownership is proven. If parallel safety is not proven, fall back to the original sequential `superpowers:subagent-driven-development` flow.
 
