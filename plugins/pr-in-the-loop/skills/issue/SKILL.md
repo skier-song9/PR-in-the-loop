@@ -46,7 +46,7 @@ Before creating the Issue, remove ambiguity with the same discipline as `superpo
 5. Run the Redaction And Write Safety Gate before any GitHub write.
 6. Create or update a GitHub Issue using the GitHub plugin/app first, then `gh` if needed. The Issue title and Issue body must use the detected user language and the Issue Template. In no-write or dry-run mode, produce the issue draft and mark it `not-created`.
 7. Do not write a PR plan, concrete spec, implementation branch, commit, or pull request in this skill.
-8. Stop after the Issue exists or the issue draft is accepted. Starting the separate `pr-in-the-loop:planning-pr` PR-plan step requires explicit human approval. If the next workflow skill requires an approved PR plan artifact and none exists, stop and request that artifact; this skill still must not create it.
+8. Stop after the Issue exists or the issue draft is accepted. Starting the separate `pr-in-the-loop:planning-pr` PR-plan step requires explicit human approval.
 9. Do not create a spec, code, branch, commit, or PR until the human explicitly approves the next workflow step.
 
 ## Redaction And Write Safety Gate
