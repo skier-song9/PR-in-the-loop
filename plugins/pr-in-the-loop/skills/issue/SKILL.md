@@ -1,11 +1,11 @@
 ---
-name: github-issue-pr-planning
+name: issue
 description: Use when a problem needs a GitHub Issue and a human-reviewed PR plan before implementation.
 ---
 
 <!-- DocString Spec Excerpt: Define explicit user-language detection and the Description/Tasks/References Issue Template for GitHub Issue drafting while preserving existing PR planning gates. -->
 
-# GitHub Issue PR Planning
+# Issue
 
 Create the problem record and PR plan. This is the user's GitHub-aware version of brainstorming.
 

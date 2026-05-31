@@ -1,9 +1,9 @@
 ---
-name: pr-plan-to-spec
+name: planning-pr
 description: Use when an approved PR plan must become a concrete implementation spec or plan.
 ---
 
-# PR Plan To Spec
+# Planning PR
 
 Turn an approved PR plan into a concrete implementation spec while preserving Superpowers planning.
 

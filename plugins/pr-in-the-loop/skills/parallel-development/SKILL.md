@@ -1,11 +1,11 @@
 ---
-name: docstring-parallel-implementation
+name: parallel-development
 description: Use when implementing a concrete spec from an approved PR plan with file-scoped delegation and subagents.
 ---
 
 <!-- DocString Spec Excerpt: Require context-rich delegated file-level comments while preserving parallel spawn, model/effort selection, and structured worker summaries. -->
 
-# DocString Parallel Implementation
+# Parallel Development
 
 Implement from a concrete spec by delegating responsibility into target files, then assigning fresh subagents.
 

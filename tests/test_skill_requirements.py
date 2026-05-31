@@ -1,9 +1,9 @@
-"""DocString Spec Excerpt: Lock issue-language, docstring worker model/effort, parallel spawn, install config, and Issue #11 multi-review HTML language requirements without changing runtime workflow behavior.
+"""DocString Spec Excerpt: Lock issue-language, parallel-development worker model/effort, parallel spawn, install config, and Issue #11 multi-view-code-review HTML language requirements without changing runtime workflow behavior.
 
-Context: Issue #11 adds regression coverage for multi-review HTML language detection and template placeholders.
+Context: Issue #11 adds regression coverage for multi-view-code-review HTML language detection and template placeholders.
 References: Issue #11; https://github.com/skier-song9/PR-in-the-loop/issues/11.
 Work Process: Assert exact strings in the skill and template so report language policy cannot regress silently.
-Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_review_html_requires_language_detection_and_template_language_placeholders
+Test Method: python3 -m unittest tests.test_skill_requirements.SkillRequirementTests.test_multi_view_code_review_requires_language_detection_and_template_language_placeholders
 """
 
 from __future__ import annotations
@@ -17,6 +17,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_DIR = ROOT / "plugins" / "pr-in-the-loop"
 SKILLS = PLUGIN_DIR / "skills"
+EXPECTED_SKILL_NAMES = {
+    "github-dev-workflow",
+    "issue",
+    "planning-pr",
+    "parallel-development",
+    "multi-view-code-review",
+    "open-pr",
+}
+
+RENAMED_SKILL_NAMES = {
+    "github-issue-pr-planning": "issue",
+    "pr-plan-to-spec": "planning-pr",
+    "docstring-parallel-implementation": "parallel-development",
+    "multi-review-html": "multi-view-code-review",
+    "pr-message-writer": "open-pr",
+}
 
 
 def read_skill(name: str) -> str:
@@ -62,15 +78,69 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertEqual("PR In The Loop", manifest["interface"]["displayName"])
         self.assertEqual("$pr-in-the-loop:github-dev-workflow", manifest["interface"]["defaultPrompt"])
 
+    def test_skill_directories_and_frontmatter_use_workflow_step_names(self) -> None:
+        actual_names = {
+            path.name
+            for path in SKILLS.iterdir()
+            if path.is_dir() and (path / "SKILL.md").is_file()
+        }
+
+        self.assertEqual(EXPECTED_SKILL_NAMES, actual_names)
+        for old_name in RENAMED_SKILL_NAMES:
+            self.assertFalse((SKILLS / old_name).exists(), old_name)
+        for skill_name in EXPECTED_SKILL_NAMES:
+            text = read_skill(skill_name)
+            self.assertRegex(text, rf"(?m)^name: {re.escape(skill_name)}$")
+
+    def test_github_dev_workflow_references_new_skill_names(self) -> None:
+        text = read_skill("github-dev-workflow")
+
+        self.assertIn("pr-in-the-loop:issue", text)
+        self.assertIn("pr-in-the-loop:planning-pr", text)
+        self.assertIn("pr-in-the-loop:parallel-development", text)
+        self.assertIn("pr-in-the-loop:multi-view-code-review", text)
+        self.assertIn("pr-in-the-loop:open-pr", text)
+        for old_name in RENAMED_SKILL_NAMES:
+            self.assertNotIn(f"pr-in-the-loop:{old_name}", text)
+
+    def test_readmes_use_new_skill_names(self) -> None:
+        for filename in ("README.md", "README.ko.md"):
+            text = read_root_file(filename)
+            self.assertIn("pr-in-the-loop:github-dev-workflow", text)
+            self.assertIn("pr-in-the-loop:issue", text)
+            self.assertIn("pr-in-the-loop:planning-pr", text)
+            self.assertIn("pr-in-the-loop:parallel-development", text)
+            self.assertIn("pr-in-the-loop:multi-view-code-review", text)
+            self.assertIn("pr-in-the-loop:open-pr", text)
+            for old_name in RENAMED_SKILL_NAMES:
+                self.assertNotIn(f"pr-in-the-loop:{old_name}", text)
+
+    def test_active_test_names_use_new_skill_names(self) -> None:
+        retired_method_name_parts = {
+            "pr_plan_to_spec",
+            "docstring_parallel",
+            "multi_review",
+            "pr_message_writer",
+        }
+        active_test_names = {
+            name for name in dir(type(self)) if name.startswith("test_")
+        }
+
+        for retired_part in retired_method_name_parts:
+            self.assertFalse(
+                any(retired_part in name for name in active_test_names),
+                retired_part,
+            )
+
     def test_issue_pr_planning_requires_session_language_and_ambiguity_gate(self) -> None:
-        text = read_skill("github-issue-pr-planning")
+        text = read_skill("issue")
 
         self.assertIn("detected user language", text)
         self.assertIn("Ambiguity Gate", text)
         self.assertIn("Do not create the Issue or PR plan while blocking ambiguity remains", text)
 
     def test_issue_pr_planning_requires_issue_language_detection(self) -> None:
-        text = read_skill("github-issue-pr-planning")
+        text = read_skill("issue")
 
         self.assertIn("User Language Detection", text)
         self.assertIn("Before drafting or creating a GitHub Issue", text)
@@ -86,7 +156,7 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("using the detected user language", text)
 
     def test_issue_pr_planning_requires_issue_template(self) -> None:
-        text = read_skill("github-issue-pr-planning")
+        text = read_skill("issue")
 
         self.assertIn("Issue Template", text)
         self.assertIn("## Description", text)
@@ -101,31 +171,31 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("Fill `References` with relevant links, related Issues or PRs, source files, or `None`", text)
 
     def test_pr_plan_template_has_clarification_status_and_language_instruction(self) -> None:
-        text = read_reference("github-issue-pr-planning", "pr-plan-template.md")
+        text = read_reference("issue", "pr-plan-template.md")
 
         self.assertIn("Write this PR plan in the agent conversation session's primary language", text)
         self.assertIn("## Clarification Notes", text)
         self.assertIn("Status: ambiguity-resolved", text)
 
-    def test_pr_plan_to_spec_requires_english_output(self) -> None:
-        text = read_skill("pr-plan-to-spec")
-        template = read_reference("pr-plan-to-spec", "spec-template.md")
+    def test_planning_pr_requires_english_output(self) -> None:
+        text = read_skill("planning-pr")
+        template = read_reference("planning-pr", "spec-template.md")
 
         self.assertIn("Always write the generated spec in English", text)
         self.assertIn("This spec must be written in English", template)
 
-    def test_docstring_parallel_requires_spec_excerpts_and_subagent_evidence(self) -> None:
-        text = read_skill("docstring-parallel-implementation")
-        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+    def test_parallel_development_requires_spec_excerpts_and_subagent_evidence(self) -> None:
+        text = read_skill("parallel-development")
+        prompt = read_reference("parallel-development", "worker-prompt-template.md")
 
         self.assertIn("DocString Spec Excerpt", text)
         self.assertIn("Do not dispatch a worker until each target file either contains", text)
         self.assertIn("DocString/comments used by path", prompt)
         self.assertIn("Subagent verification", text)
 
-    def test_docstring_parallel_requires_context_rich_delegation_comments(self) -> None:
-        text = read_skill("docstring-parallel-implementation")
-        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+    def test_parallel_development_requires_context_rich_delegation_comments(self) -> None:
+        text = read_skill("parallel-development")
+        prompt = read_reference("parallel-development", "worker-prompt-template.md")
 
         self.assertIn(
             "Add a short file-level comment to each target file that explains the spec context and the responsibility delegated to that file.",
@@ -169,9 +239,9 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("Residual Risks", prompt)
         self.assertIn("DocString/comments used by path", prompt)
 
-    def test_docstring_parallel_requires_model_effort_selection_policy(self) -> None:
-        text = read_skill("docstring-parallel-implementation")
-        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+    def test_parallel_development_requires_model_effort_selection_policy(self) -> None:
+        text = read_skill("parallel-development")
+        prompt = read_reference("parallel-development", "worker-prompt-template.md")
 
         self.assertIn("Subagent Model And Effort Selection", text)
         self.assertIn("Set `model` and `reasoning_effort` when spawning each worker", text)
@@ -190,9 +260,9 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("Selected reasoning effort:", prompt)
         self.assertIn("Selection reason:", prompt)
 
-    def test_docstring_parallel_requires_parallel_spawn_policy(self) -> None:
-        text = read_skill("docstring-parallel-implementation")
-        prompt = read_reference("docstring-parallel-implementation", "worker-prompt-template.md")
+    def test_parallel_development_requires_parallel_spawn_policy(self) -> None:
+        text = read_skill("parallel-development")
+        prompt = read_reference("parallel-development", "worker-prompt-template.md")
 
         self.assertIn("Parallel Subagent Spawn Policy", text)
         self.assertIn("Use parallel subagents for independent work", text)
@@ -241,9 +311,9 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("do not append a duplicate `[agents]` table", handoff)
         self.assertIn("record previous values", handoff)
 
-    def test_multi_review_requires_all_reviewers_and_kami_layout(self) -> None:
-        text = read_skill("multi-review-html")
-        template = read_reference("multi-review-html", "html-report-template.md")
+    def test_multi_view_code_review_requires_all_reviewers_and_kami_layout(self) -> None:
+        text = read_skill("multi-view-code-review")
+        template = read_reference("multi-view-code-review", "html-report-template.md")
 
         self.assertIn("Dispatch every reviewer prompt", text)
         self.assertIn("Kami-inspired Layout Guide", text)
@@ -251,9 +321,9 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertIn("#1B365D", text)
         self.assertIn("class=\"review-shell\"", template)
 
-    def test_multi_review_html_requires_language_detection_and_template_language_placeholders(self) -> None:
-        text = read_skill("multi-review-html")
-        template = read_reference("multi-review-html", "html-report-template.md")
+    def test_multi_view_code_review_requires_language_detection_and_template_language_placeholders(self) -> None:
+        text = read_skill("multi-view-code-review")
+        template = read_reference("multi-view-code-review", "html-report-template.md")
 
         self.assertIn("Language Rule", text)
         self.assertIn("User Language Detection", text)
@@ -331,21 +401,21 @@ class SkillRequirementTests(unittest.TestCase):
         self.assertNotIn("OPTIONAL_REVIEWER_VERDICT_CONTRACT_VALUE", template)
         self.assertNotIn('<html lang="ko">', template)
 
-    def test_pr_message_writer_follows_user_language(self) -> None:
-        text = read_skill("pr-message-writer")
+    def test_open_pr_follows_user_language(self) -> None:
+        text = read_skill("open-pr")
 
         self.assertIn("user's primary language", text)
         self.assertNotIn("Korean template by default", text)
 
-    def test_pr_message_writer_triggers_for_pull_request_preparation_intent(self) -> None:
-        text = read_skill("pr-message-writer")
+    def test_open_pr_triggers_for_pull_request_preparation_intent(self) -> None:
+        text = read_skill("open-pr")
         dev_workflow = read_skill("github-dev-workflow")
 
         self.assertIn("completed changes are ready to be represented as a pull request", text)
         self.assertIn("regardless of the user's exact phrasing", text)
         self.assertIn("before any pull request creation or publication flow", text)
-        self.assertIn("PR Message Writer is the mandatory evidence-to-PR-body step", text)
-        self.assertIn("use `pr-in-the-loop:pr-message-writer` before creating or publishing the pull request", dev_workflow)
+        self.assertIn("Open PR is the mandatory evidence-to-PR-body step", text)
+        self.assertIn("use `pr-in-the-loop:open-pr` before creating or publishing the pull request", dev_workflow)
 
 
 if __name__ == "__main__":

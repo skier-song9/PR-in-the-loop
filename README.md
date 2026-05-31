@@ -62,11 +62,11 @@ Open a new Codex thread after updating, then invoke `$pr-in-the-loop:github-dev-
 
 ## The Basic Workflow
 
-1. `pr-in-the-loop:github-issue-pr-planning` - inspect repo context, create or draft a GitHub Issue, write a PR plan, and stop for human review.
-2. `pr-in-the-loop:pr-plan-to-spec` - use Superpowers planning discipline to turn the approved PR plan into a concrete implementation spec. The spec is not human-reviewed and is not committed.
-3. `pr-in-the-loop:docstring-parallel-implementation` - copy each file's responsibility from the spec into a short DocString or comment, then dispatch safe file groups to fresh subagents.
-4. `pr-in-the-loop:multi-review-html` - run typed reviewer subagents in parallel and synthesize one HTML report under `docs/reviews/`.
-5. `pr-in-the-loop:pr-message-writer` - draft the final Korean PR message after the human accepts the review state.
+1. `pr-in-the-loop:issue` - inspect repo context, create or draft a GitHub Issue, write a PR plan, and stop for human review.
+2. `pr-in-the-loop:planning-pr` - use Superpowers planning discipline to turn the approved PR plan into a concrete implementation spec. The spec is not human-reviewed and is not committed.
+3. `pr-in-the-loop:parallel-development` - copy each file's responsibility from the spec into a short DocString or comment, then dispatch safe file groups to fresh subagents.
+4. `pr-in-the-loop:multi-view-code-review` - run typed reviewer subagents in parallel and synthesize one HTML report under `docs/reviews/`.
+5. `pr-in-the-loop:open-pr` - draft the final PR message after the human accepts the review state.
 
 ## What's Inside
 
@@ -81,15 +81,15 @@ Open a new Codex thread after updating, then invoke `$pr-in-the-loop:github-dev-
 | Skill | When to use |
 |---|---|
 | `pr-in-the-loop:github-dev-workflow` | Run the full Issue-to-PR workflow. |
-| `pr-in-the-loop:github-issue-pr-planning` | Start from a problem, create/draft a GitHub Issue, and write a human-reviewed PR plan. |
-| `pr-in-the-loop:pr-plan-to-spec` | Convert an approved PR plan into a concrete, uncommitted implementation spec. |
-| `pr-in-the-loop:docstring-parallel-implementation` | Implement from a concrete spec with file-scoped delegation and safe subagents. |
-| `pr-in-the-loop:multi-review-html` | Review code through typed subagents and write one HTML report. |
-| `pr-in-the-loop:pr-message-writer` | Draft a Korean PR message from evidence. |
+| `pr-in-the-loop:issue` | Start from a problem, create/draft a GitHub Issue, and write a human-reviewed PR plan. |
+| `pr-in-the-loop:planning-pr` | Convert an approved PR plan into a concrete, uncommitted implementation spec. |
+| `pr-in-the-loop:parallel-development` | Implement from a concrete spec with file-scoped delegation and safe subagents. |
+| `pr-in-the-loop:multi-view-code-review` | Review code through typed subagents and write one HTML report. |
+| `pr-in-the-loop:open-pr` | Draft a PR message from evidence. |
 
 ### Reviewer Types
 
-`pr-in-the-loop:multi-review-html` includes reviewers for:
+`pr-in-the-loop:multi-view-code-review` includes reviewers for:
 
 - spec compliance
 - code quality and edge cases
