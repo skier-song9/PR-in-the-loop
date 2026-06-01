@@ -75,9 +75,9 @@ Set `model` and `reasoning_effort` when spawning each worker if the platform sup
 Choose the smallest capable model/effort pair for the delegated work:
 
 - trivial or mechanical docs/test checks: `gpt-5.4-mini` + `low`
-- simple bounded docs, tests, or code edits: `gpt-5.3-codex-spark` or `gpt-5.4-mini` + `medium`
-- routine implementation with local tests: `gpt-5.3-codex` or `gpt-5.4` + `medium`
-- complex integration, shared contracts, or reviewer work: `gpt-5.4` + `high`
+- simple bounded docs, tests, or code edits: `gpt-5.4-mini` + `high`
+- routine implementation with local tests: `gpt-5.5` or `gpt-5.4` + `medium`
+- complex integration, shared contracts, or reviewer work: `gpt-5.5` + `high`
 - high-uncertainty architecture, security, or cross-system work: `gpt-5.5` + `high` or `xhigh`
 
 Record the selected model, selected reasoning effort, and selection reason in the worker prompt. If a task is misclassified after reading the file group, prefer raising the model/effort before spawning over recovering from a weak worker result.

@@ -105,9 +105,9 @@ Set `model` and `reasoning_effort` when spawning each reviewer if the platform s
 
 Choose the smallest capable model/effort pair for each reviewer task:
 
-- docs and PR context checks: `gpt-5.4-mini` or `gpt-5.3-codex-spark` + `medium`
-- spec compliance and general code quality review: `gpt-5.4` + `medium` or `high`
-- security, idempotency, data contract, or ADK/agent architecture review: `gpt-5.4` + `high`
+- docs and PR context checks: `gpt-5.4-mini` or `gpt-5.3-codex` + `medium`
+- spec compliance and general code quality review: `gpt-5.5` + `medium` or `high`
+- security, idempotency, data contract, or ADK/agent architecture review: `gpt-5.5` + `xhigh`
 - high-uncertainty, cross-system, or security-critical review: `gpt-5.5` + `high` or `xhigh`
 
 Record the selected model, selected reasoning effort, and selection reason in the reviewer spawn metadata. If a reviewer task is misclassified before dispatch, raise the model/effort before spawning instead of accepting a weak review result.
