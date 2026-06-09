@@ -47,6 +47,8 @@ Inspect work environment context first:
 - User-provided links or instructions in the current request
 - Local project hints for Slack, Notion, Linear, Jira, Google Workspace, GitHub Projects, or other work systems
 
+When the user asks to test, validate, or dogfood this plugin, use the canonical sandbox project documented in `../../references/test-projects.md`. Do not use that sandbox for normal user project work unless the request is explicitly about plugin testing.
+
 Then inspect local project context:
 
 - `git status --short --branch`, current branch, remotes, recent commits
