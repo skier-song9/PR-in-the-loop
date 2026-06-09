@@ -1,7 +1,7 @@
 {
   "name": "pr-in-the-loop",
-  "version": "0.1.0+codex.20260601025832",
-  "description": "GitHub issue-to-PR development workflow skills modeled on Superpowers and recent user work patterns.",
+  "version": "0.1.0",
+  "description": "Issue-first engineering workflow skills for Codex.",
   "author": {
     "name": "skier-song9",
     "url": "https://github.com/skier-song9"
@@ -11,16 +11,16 @@
   "license": "Apache-2.0",
   "keywords": [
     "github",
-    "pull-request",
+    "issue",
     "workflow",
-    "code-review",
-    "superpowers"
+    "engineering",
+    "planning"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "PR In The Loop",
-    "shortDescription": "Human-in-the-loop Issue, PR planning, implementation, review, and PR message workflows for Codex.",
-    "longDescription": "PR In The Loop packages a Superpowers-aligned development process: create an issue, write and human-review a PR plan, convert the approved plan into an implementation spec, delegate file-scoped implementation with fresh subagents, run typed parallel code review into an HTML report, and draft a Korean PR message.",
+    "shortDescription": "Create concrete GitHub Issues from live work context.",
+    "longDescription": "PR In The Loop packages issue-first development workflows for Codex. Its first skill inspects repository and work-tool context, narrows ambiguous engineering work into one concrete problem, drafts an issue using project templates, and publishes it to GitHub.",
     "developerName": "skier-song9",
     "category": "Coding",
     "capabilities": [
@@ -28,7 +28,7 @@
       "Write",
       "Interactive"
     ],
-    "defaultPrompt": "$pr-in-the-loop:github-dev-workflow",
+    "defaultPrompt": "Use $pr-in-the-loop:open-issue to turn current work context into a GitHub Issue.",
     "websiteURL": "https://github.com/skier-song9/PR-in-the-loop",
     "privacyPolicyURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/README.md",
     "termsOfServiceURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/LICENSE",

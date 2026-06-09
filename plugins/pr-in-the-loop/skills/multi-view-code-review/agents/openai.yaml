@@ -1,3 +1,0 @@
-interface:
-  display_name: "Multi View Code Review"
-  short_description: "Run typed reviewer subagents and create an HTML report"

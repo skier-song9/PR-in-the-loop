@@ -1,3 +1,0 @@
-interface:
-  display_name: "Parallel Development"
-  short_description: "Generate specs from PR plans, then run safe subagents"

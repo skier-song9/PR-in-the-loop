@@ -1,3 +1,0 @@
-interface:
-  display_name: "Issue"
-  short_description: "Create or draft a GitHub Issue only. Do not write a PR plan"
