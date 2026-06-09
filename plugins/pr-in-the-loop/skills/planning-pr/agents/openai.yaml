@@ -1,0 +1,4 @@
+interface:
+  display_name: "Planning PR"
+  short_description: "Plan reviewable PR phases from an Issue"
+  default_prompt: "Use $planning-pr to turn an existing GitHub Issue into human-reviewable PR plan documents."

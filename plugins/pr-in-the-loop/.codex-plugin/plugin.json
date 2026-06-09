@@ -1,7 +1,7 @@
 {
   "name": "pr-in-the-loop",
   "version": "0.1.0",
-  "description": "Issue-first engineering workflow skills for Codex.",
+  "description": "Issue-first engineering workflow and PR planning skills for Codex.",
   "author": {
     "name": "skier-song9",
     "url": "https://github.com/skier-song9"
@@ -12,6 +12,7 @@
   "keywords": [
     "github",
     "issue",
+    "pr",
     "workflow",
     "engineering",
     "planning"
@@ -19,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "PR In The Loop",
-    "shortDescription": "Create concrete GitHub Issues from live work context.",
-    "longDescription": "PR In The Loop packages issue-first development workflows for Codex. Its first skill inspects repository and work-tool context, narrows ambiguous engineering work into one concrete problem, drafts an issue using project templates, and publishes it to GitHub.",
+    "shortDescription": "Create Issues and plan reviewable PRs.",
+    "longDescription": "PR In The Loop packages issue-first development workflows for Codex. It can inspect repository and work-tool context, narrow ambiguous engineering work into one concrete GitHub Issue, and turn an existing Issue into human-reviewable PR plan documents split into minimum functional phases.",
     "developerName": "skier-song9",
     "category": "Coding",
     "capabilities": [
@@ -28,7 +29,7 @@
       "Write",
       "Interactive"
     ],
-    "defaultPrompt": "Use $pr-in-the-loop:open-issue to turn current work context into a GitHub Issue.",
+    "defaultPrompt": "Use $pr-in-the-loop:open-issue to turn current work context into a GitHub Issue, then use $pr-in-the-loop:planning-pr to write reviewable PR plan documents.",
     "websiteURL": "https://github.com/skier-song9/PR-in-the-loop",
     "privacyPolicyURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/README.md",
     "termsOfServiceURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/LICENSE",
