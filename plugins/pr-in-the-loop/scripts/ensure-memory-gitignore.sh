@@ -9,10 +9,12 @@ else
 fi
 
 gitignore="$root/.gitignore"
-memory_dir="$root/.memory/open-issue"
-memory_file=".memory/open-issue/work-context.md"
+open_issue_memory_dir="$root/.memory/open-issue"
+planning_pr_memory_dir="$root/.memory/planning-pr"
+open_issue_memory_file=".memory/open-issue/work-context.md"
+planning_pr_memory_file=".memory/planning-pr/work-context.md"
 
-mkdir -p "$memory_dir"
+mkdir -p "$open_issue_memory_dir" "$planning_pr_memory_dir"
 
 if [ ! -f "$gitignore" ]; then
   printf ".memory/\n" > "$gitignore"
@@ -26,11 +28,13 @@ else
 fi
 
 if [ "$in_git_repo" -eq 1 ]; then
-  if ! git -C "$root" check-ignore -q "$memory_file"; then
-    printf "error: %s is still not ignored by git\n" "$memory_file" >&2
-    printf "check .gitignore negation rules and rerun this script\n" >&2
-    exit 1
-  fi
+  for memory_file in "$open_issue_memory_file" "$planning_pr_memory_file"; do
+    if ! git -C "$root" check-ignore -q "$memory_file"; then
+      printf "error: %s is still not ignored by git\n" "$memory_file" >&2
+      printf "check .gitignore negation rules and rerun this script\n" >&2
+      exit 1
+    fi
+  done
 fi
 
 printf "ok: .memory/ is ignored by git\n"
