@@ -24,6 +24,23 @@ class PlanNDevSkillTest(unittest.TestCase):
         self.assertIn("Use automatically when a PR plan exists, no spec exists", self.skill)
         self.assertIn("the user does not know what to do next", self.skill)
 
+    def test_frontmatter_description_is_short_routing_metadata(self):
+        description = next(
+            line.removeprefix("description: ").strip()
+            for line in self.skill.splitlines()
+            if line.startswith("description: ")
+        )
+        self.assertLessEqual(len(description), 90)
+        self.assertIn("planning-pr", description)
+        self.assertIn("implementation", description)
+        for documentation_detail in [
+            ".memory/specs",
+            "Trigger automatically",
+            "Do not use",
+            "save",
+        ]:
+            self.assertNotIn(documentation_detail, description)
+
     def test_skill_writes_uncommitted_english_specs_under_memory(self):
         self.assertIn(".memory/specs", self.skill)
         self.assertIn("Always write the spec document in English", self.skill)

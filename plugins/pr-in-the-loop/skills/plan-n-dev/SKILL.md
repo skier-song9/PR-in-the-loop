@@ -1,6 +1,6 @@
 ---
 name: plan-n-dev
-description: Use when a planning-pr PR plan document already exists and Codex needs to turn it into a concrete implementation spec, save that spec under .memory/specs, and start implementation immediately. Trigger automatically when a PR plan exists, no matching spec exists, and the user asks what to do next, says to proceed, or appears unsure how to move from PR planning into development. Do not use for issue discovery before an issue exists, writing human-reviewable PR plans, code review only, or PR publishing only.
+description: Use when an existing planning-pr PR plan is ready for implementation.
 ---
 
 # Plan N Dev
