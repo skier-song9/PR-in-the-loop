@@ -1,7 +1,7 @@
 {
   "name": "pr-in-the-loop",
   "version": "0.1.0",
-  "description": "Issue-first engineering workflow and PR planning skills for Codex.",
+  "description": "Issue-first engineering workflow, PR planning, and implementation spec skills for Codex.",
   "author": {
     "name": "skier-song9",
     "url": "https://github.com/skier-song9"
@@ -20,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "PR In The Loop",
-    "shortDescription": "Create Issues and plan reviewable PRs.",
-    "longDescription": "PR In The Loop packages issue-first development workflows for Codex. It can inspect repository and work-tool context, narrow ambiguous engineering work into one concrete GitHub Issue, and turn an existing Issue into human-reviewable PR plan documents split into minimum functional phases.",
+    "shortDescription": "Create Issues, plan PRs, and execute specs.",
+    "longDescription": "PR In The Loop packages issue-first development workflows for Codex. It can inspect repository and work-tool context, narrow ambiguous engineering work into one concrete GitHub Issue, turn an existing Issue into human-reviewable PR plan documents split into minimum functional phases, and convert those PR plans into local implementation specs for immediate development.",
     "developerName": "skier-song9",
     "category": "Coding",
     "capabilities": [
@@ -29,7 +29,7 @@
       "Write",
       "Interactive"
     ],
-    "defaultPrompt": "Use $pr-in-the-loop:open-issue to turn current work context into a GitHub Issue, then use $pr-in-the-loop:planning-pr to write reviewable PR plan documents.",
+    "defaultPrompt": "Use $pr-in-the-loop:open-issue to turn current work context into a GitHub Issue, use $pr-in-the-loop:planning-pr to write reviewable PR plan documents, then use $pr-in-the-loop:plan-n-dev to write the local implementation spec and implement it.",
     "websiteURL": "https://github.com/skier-song9/PR-in-the-loop",
     "privacyPolicyURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/README.md",
     "termsOfServiceURL": "https://github.com/skier-song9/PR-in-the-loop/blob/master/LICENSE",
