@@ -63,6 +63,20 @@ class PlanNDevSkillTest(unittest.TestCase):
         ]:
             self.assertIn(header, self.skill)
 
+    def test_skill_enforces_tdd_and_compact_scope_discipline(self):
+        for phrase in [
+            "No implementation code before a failing test has been written and observed",
+            "RED must fail for the expected missing behavior",
+            "GREEN must be the smallest implementation",
+            "Refactor only after GREEN",
+            "Implement exactly what the task specifies",
+            "Do not create committed helper, benchmark, or validation files",
+            "Prefer existing test and build commands over new committed harnesses",
+            "Each committed file should have one clear responsibility",
+            "DONE_WITH_CONCERNS",
+        ]:
+            self.assertIn(phrase, self.skill)
+
     def test_skill_uses_explicit_gpt55_for_strong_subagents(self):
         self.assertNotIn("latest model", self.skill)
         self.assertIn('model: "gpt-5.5"', self.skill)

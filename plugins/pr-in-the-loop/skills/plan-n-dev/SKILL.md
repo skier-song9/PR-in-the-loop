@@ -68,7 +68,7 @@ Every generated spec must use this structure:
 
 **Tech Stack:** <Languages, frameworks, test tools, and relevant local scripts>
 
-**Commit Policy:** This spec is local memory and not a commit target. Commit only implementation and test files unless the user explicitly says otherwise.
+**Commit Policy:** This spec is local memory and not a commit target. Commit only implementation files and project-required tests unless the user explicitly says otherwise.
 
 ---
 
@@ -76,7 +76,7 @@ Every generated spec must use this structure:
 
 - Create: `exact/path/to/new_file.ext` - <responsibility>
 - Modify: `exact/path/to/existing_file.ext` - <responsibility>
-- Test: `tests/exact/path/test_file.ext` - <behavior covered>
+- Test/Validate: `exact test command or tests/exact/path/test_file.ext` - <behavior covered>
 
 ## Tasks
 
@@ -85,9 +85,9 @@ Every generated spec must use this structure:
 **Files:**
 - Create: `exact/path/to/file.ext`
 - Modify: `exact/path/to/existing.ext`
-- Test: `tests/exact/path/test_file.ext`
+- Test/Validate: `exact test command or tests/exact/path/test_file.ext`
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1: Write the failing test or validation check**
 
 ```<language>
 <complete test code or exact patch-sized snippet>
@@ -112,10 +112,17 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add <implementation-and-test-files-only>
+git add <implementation-and-project-required-test-files-only>
 git commit -m "<type>: <specific change>"
 ```
 ```
+
+## TDD Discipline
+
+- No implementation code before a failing test has been written and observed.
+- RED must fail for the expected missing behavior, not syntax, setup, or assertion mistakes.
+- GREEN must be the smallest implementation that passes the failing test.
+- Refactor only after GREEN, and rerun the same tests afterward.
 
 ## Execution Discipline
 
@@ -123,6 +130,9 @@ For each task:
 
 - Give a fresh implementation worker the full task text, source PR plan path, spec path, target repo path, and any relevant local conventions. Do not make the worker rediscover the plan file when you can pass the exact task.
 - Require test-first work: write the failing test, run it, implement the minimum code, then run it again.
+- Implement exactly what the task specifies. Do not create committed helper, benchmark, or validation files unless the PR plan, existing repo conventions, or required test strategy calls for them.
+- Prefer existing test and build commands over new committed harnesses. If a temporary validation script is useful, keep it under `.memory/` or leave it uncommitted.
+- Each committed file should have one clear responsibility. If a new file grows beyond the plan's intent, stop and report `DONE_WITH_CONCERNS` instead of adding architecture outside the plan.
 - Require the worker to report `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED`.
 - Treat `NEEDS_CONTEXT` as a prompt-quality failure: provide the missing context and retry.
 - Treat `BLOCKED` as a real blocker: provide better context, split the task, or ask the user only if no local evidence can resolve it.
