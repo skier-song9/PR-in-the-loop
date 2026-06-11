@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan N Dev"
+  short_description: "Spec and implement PR plans"
+  default_prompt: "Use $plan-n-dev to turn a planning-pr document into an English spec under .memory/specs and implement it."
