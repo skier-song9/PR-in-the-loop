@@ -149,10 +149,9 @@ Do not describe strong subagent selection with implicit wording. When a strong i
 ```yaml
 model: "gpt-5.5"
 reasoning_effort: "xhigh"
-service_tier: "priority"
 ```
 
-Use these literal values in the subagent dispatch request so the runtime can select the intended model and effort.
+Use only dispatch fields supported by the current subagent API so the review path does not fail on unsupported options.
 
 ## Quality Bar
 

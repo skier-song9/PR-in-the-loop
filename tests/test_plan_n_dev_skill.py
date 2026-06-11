@@ -81,7 +81,8 @@ class PlanNDevSkillTest(unittest.TestCase):
         self.assertNotIn("latest model", self.skill)
         self.assertIn('model: "gpt-5.5"', self.skill)
         self.assertIn('reasoning_effort: "xhigh"', self.skill)
-        self.assertIn('service_tier: "priority"', self.skill)
+        self.assertNotIn("service_tier", self.skill)
+        self.assertIn("Use only dispatch fields supported by the current subagent API", self.skill)
 
     def test_agent_metadata_exists(self):
         self.assertIn('display_name: "Plan N Dev"', self.agent_yaml)
